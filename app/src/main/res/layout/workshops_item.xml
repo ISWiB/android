@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/workshops_item"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/workshops_item_height"
+    android:layout_marginTop="5dp">
+
+    <ImageView
+        android:id="@+id/workshops_item_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/image_description"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/workshops_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:gravity="center_horizontal|bottom"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:background="@color/text_dim" />
+</RelativeLayout>

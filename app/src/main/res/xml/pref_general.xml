@@ -1,0 +1,29 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <PreferenceCategory
+        android:title="@string/pref_header_notifications">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notifications_receive"
+            android:title="@string/pref_notifications_receive" />
+    </PreferenceCategory>
+
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <PreferenceCategory
+        android:title="@string/pref_header_data_sync">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/pref_sync_entries"
+            android:entryValues="@array/pref_sync_values"
+            android:key="sync_type"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_sync_type" />
+    </PreferenceCategory>
+</PreferenceScreen>

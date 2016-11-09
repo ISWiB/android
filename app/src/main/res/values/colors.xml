@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="menuLight">#C3C3C3</color>
+    <color name="menuDark">#808080</color>
+    <color name="text_dim">#812b2b2b</color>
+    <color name="update_info">#4052B6</color>
+    <color name="news_button">#4052B6</color>
+    <color name="white">#ffffff</color>
+    <color name="white_transparent">#a9ffffff</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="iswib_color_1">#E73A8F</color>
+    <color name="iswib_color_2">#2CACE2</color>
+    <color name="iswib_color_3">#F79230</color>
+    <color name="iswib_color_4">#81C35A</color>
+    <color name="iswib_color_1_transparent">#b4a6143d</color>
+    <color name="iswib_color_2_transparent">#b51a7ea9</color>
+    <color name="iswib_color_3_transparent">#b3e18327</color>
+    <color name="iswib_color_4_transparent">#8781c35a</color>
+</resources>

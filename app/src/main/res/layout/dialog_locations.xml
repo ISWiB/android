@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fadeScrollbars="false"
+    android:scrollbarThumbVertical="@color/iswib_color_4_transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_metropolitan"
+            android:tag="metropolitan"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_parobrod"
+            android:tag="parobrod"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_openingceremony"
+            android:tag="openingceremony"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_closingceremony"
+            android:tag="closingceremony"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_odg"
+            android:tag="odg"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_countryfair"
+            android:tag="countryfair"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_artnight"
+            android:tag="artnight"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_flagparade"
+            android:tag="flagparade"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_sightseeing"
+            android:tag="sightseeing"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_welcome"
+            android:tag="welcome"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_farewell"
+            android:tag="farewell"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_monparty"
+            android:tag="monparty"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_kafana"
+            android:tag="kafana"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_cetinjska"
+            android:tag="cetinjska"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
+            android:text="@string/maps_location_ada"
+            android:tag="ada"
+            android:onClick="focusTo"/>
+    </LinearLayout>
+</ScrollView>

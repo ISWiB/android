@@ -1,0 +1,125 @@
+<resources>
+    <string name="app_name">ISWiB Explorer</string>
+
+    <!-- Strings related to activities -->
+    <string name="activity_news">ISWiB News</string>
+        <string name="news_more">Load more news</string>
+        <string name="news_no_more">No more news!</string>
+        <string name="news_empty">No news to display…</string>
+
+    <string name="activity_calendar">ISWiB Schedule</string>
+        <string name="calendar_database_empty">Schedule is empty…</string>
+
+    <string name="activity_workshops">Workshops</string>
+        <string name="workshops_empty">Workshops empty…</string>
+
+    <string name="activity_maps">ISWiB Map</string>
+
+    <string name="activity_settings">ISWiB Settings</string>
+
+    <!-- Settings for buttons on main page -->
+    <string name="main_calendar">SCHEDULE</string>
+    <string name="main_news">NEWS</string>
+    <string name="main_workshops">WORKSHOPS</string>
+    <string name="main_maps">MAP</string>
+
+    <!-- Strings related to main menu -->
+    <string name="menu_news">News</string>
+    <string name="menu_workshops">Workshops</string>
+    <string name="menu_calendar">Schedule</string>
+    <string name="menu_maps">Map</string>
+    <string name="menu_settings">Settings</string>
+
+    <!-- Strings related to schedule found in calendar -->
+    <string name="schedule_breakfast">Breakfast</string>
+    <string name="schedule_lunch">Lunch</string>
+    <string name="schedule_dinner">Dinner</string>
+    <string name="schedule_workshops">Workshops</string>
+
+    <!-- Strings related to calendar days -->
+    <string name="day_1">DAY 1</string>
+    <string name="day_2">DAY 2</string>
+    <string name="day_3">DAY 3</string>
+    <string name="day_4">DAY 4</string>
+    <string name="day_5">DAY 5</string>
+    <string name="day_6">DAY 6</string>
+    <string name="day_7">DAY 7</string>
+    <string name="day_8">DAY 8</string>
+    <string name="today">TODAY</string>
+
+    <!-- Strings related to map locations -->
+    <string name="maps_locations">Locations</string>
+    <string name="maps_location_dom">Dorm Petar Drapšin</string>
+    <string name="maps_location_kafana">Kafana party - Konoba Akustik</string>
+    <string name="maps_location_ada">Free day at Ada lake</string>
+    <string name="maps_location_metropolitan">Workshops - Metropolitan</string>
+    <string name="maps_location_parobrod">Workshops - Parobrod</string>
+    <string name="maps_location_openingceremony">Opening Ceremony - Assembly</string>
+    <string name="maps_location_closingceremony">Closing Ceremony - Dečiji kulturni centar</string>
+    <string name="maps_location_welcome">Welcome party - Sport pub</string>
+    <string name="maps_location_farewell">Closing party - InformBiro</string>
+    <string name="maps_location_monparty">Party on Povetarac</string>
+    <string name="maps_location_countryfair">Country Fair - Dorćol Platz</string>
+    <string name="maps_location_artnight">Art night - Show Room</string>
+    <string name="maps_location_cetinjska">Party in Cetinjska</string>
+    <string name="maps_location_odg">Innovation Conversation - Opština Stari Grad</string>
+    <string name="maps_location_flagparade">Flag Parade - Republic Square</string>
+    <string name="maps_location_sightseeing">Sightseeing - John Kennedy bus stop</string>
+
+    <!-- Strings defined far various uses -->
+    <string name="no_permission">Connect to the internet or check you sync settings…</string>
+    <string name="article_image">Article Image</string>
+    <string name="article_gradient">Article Gradient</string>
+    <string name="image_description">Image Description</string>
+    <string name="update_info">Updating… Please wait</string>
+    <string name="download_error">Error updating…</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+
+    <!-- DESCOPED FOR NOW
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+-->
+    <string name="pref_title_add_friends_to_messages">Nesto</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_sync_type">Sync type</string>
+    <string-array name="pref_sync_entries">
+        <item>WiFi only</item>
+        <item>WiFi and mobile data</item>
+        <item>WiFi and mobile data with roaming</item>
+    </string-array>
+    <string-array name="pref_sync_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_notifications_receive">Receive notifications</string>
+    <string name="pref_notifications_ringtone">Ringtone</string>
+    <string name="pref_notifications_silent">Silent</string>
+    <string name="pref_notifications_vibrate">Vibrate</string>
+</resources>

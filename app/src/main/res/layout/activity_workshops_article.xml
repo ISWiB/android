@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".workshops.WorkshopsArticle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/workshops_article_scroll">
+
+    <RelativeLayout
+        android:id="@+id/workshops_article_container"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/workshops_item_height"
+            android:id="@+id/workshops_article_image"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/article_image"
+            android:adjustViewBounds="false"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/workshops_article_title"
+            android:textSize="25sp"
+            android:layout_below="@id/workshops_article_image"
+            android:textStyle="bold"
+            android:paddingLeft="15dp"
+            android:paddingStart="15dp"
+            android:paddingRight="15dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:textColor="#000000" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/workshops_article_text"
+            android:layout_below="@id/workshops_article_title"
+            android:paddingLeft="15dp"
+            android:paddingStart="15dp"
+            android:paddingRight="15dp"
+            android:paddingEnd="15dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp" />
+    </RelativeLayout>
+</ScrollView>
