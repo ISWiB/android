@@ -4,7 +4,7 @@
     <!-- Strings related to activities -->
     <string name="activity_news">ISWiB News</string>
         <string name="news_more">Load more news</string>
-        <string name="news_no_more">No more news!</string>
+        <string name="news_no_more">No more news</string>
         <string name="news_empty">No news to display…</string>
 
     <string name="activity_calendar">ISWiB Schedule</string>
