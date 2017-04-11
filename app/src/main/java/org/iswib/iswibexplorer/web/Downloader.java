@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.iswib.iswibexplorer.settings.SettingsActivity;
 
@@ -71,6 +72,11 @@ public class Downloader {
      * @return response that is read from the server
      */
     public static String getString(String request, AsyncTask task) {
+
+        Log.i("tag", "ASDFGH");
+        Log.d("tag", "IIASDFGH");
+        Log.v("tag", "VVASDFGH");
+
 
         // result that will be returned
         StringBuilder result = new StringBuilder();

@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.i("tag", "ASDFGH");
+        Log.d("tag", "IIASDFGH");
+        Log.v("tag", "VVASDFGH");
+
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         if(getSupportActionBar() != null)
             getSupportActionBar().hide();
@@ -72,16 +76,16 @@ public class MainActivity extends AppCompatActivity {
             updating = true;
 
             // Update the news in background
-            NewsUpdater updaterN = new NewsUpdater(1, this);
-            updaterN.execute();
+//            NewsUpdater updaterN = new NewsUpdater(1, this);
+//            updaterN.execute();
 
             // Update the calendar in background
             CalendarUpdater updaterC = new CalendarUpdater(this);
             updaterC.execute();
 
             // Update the workshops in background
-            WorkshopsUpdater updaterW = new WorkshopsUpdater(this);
-            updaterW.execute();
+//            WorkshopsUpdater updaterW = new WorkshopsUpdater(this);
+//            updaterW.execute();
         }
 
         // Handle notifications

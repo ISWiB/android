@@ -56,7 +56,7 @@ public class NewsUpdater extends AsyncTask<String, Void, String> {
          */
 
         // call the API script that will return all news ids
-        String result = Downloader.getString("http://iswib.org/getNews.php", this);
+        String result = Downloader.getString("http://iswib.org/api/getNews.php", this);
 
         if(result != null) {
             // parse the ids and put them in a list
@@ -174,51 +174,6 @@ public class NewsUpdater extends AsyncTask<String, Void, String> {
     }
 
     private void addNews(String id, SQLiteDatabase db) {
-        // get all rows for news with this id
-        String result = Downloader.getString("http://iswib.org/getNews.php?id=" + id, this);
 
-        // parse the result and put every value into variable
-        try {
-            // this will create json array
-            JSONArray arr = new JSONArray(result);
-            // no need to loop as only one row will be returned
-            JSONObject json = arr.getJSONObject(0);
-            // get all fields from json object
-            String title = json.getString("title");
-            String text = json.getString("text");
-            String image = json.getString("image");
-            String date = json.getString("date");
-
-            // this will download the image
-            Bitmap img = Downloader.getImage("http://iswib.org/" + image, this);
-            image = image.substring(image.lastIndexOf("/") + 1);
-            FileOutputStream out;
-            try {
-                out = context.openFileOutput(NewsClass.PREFIX + image, Context.MODE_PRIVATE);
-                if (img != null) {
-                    img.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                }
-                out.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // add news to local database
-            // Create a new map of values, where column names are the keys
-            ContentValues values = new ContentValues();
-            values.put(NewsClass.ID, id);
-            values.put(NewsClass.TITLE, title);
-            values.put(NewsClass.TEXT, text);
-            values.put(NewsClass.IMAGE, NewsClass.PREFIX + image);
-            values.put(NewsClass.DATE, date);
-            // Insert the new row, returning the primary key value of the new row
-            db.insert(
-                NewsClass.TABLE_NAME,
-                null,
-                values);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 }

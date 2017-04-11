@@ -47,7 +47,7 @@ public class WorkshopsUpdater extends AsyncTask<String, Void, String> {
          */
 
         // call the API script that will return all workshop ids
-        String result = Downloader.getString("http://iswib.org/getWorkshops.php", this);
+        String result = Downloader.getString("http://iswib.org/api/getWorkshops.php", this);
 
         if(result != null) {
             // parse the ids and put them in a list
@@ -155,7 +155,7 @@ public class WorkshopsUpdater extends AsyncTask<String, Void, String> {
 
     private void updateWorkshops(String id, SQLiteDatabase db) {
         // get all rows for workshop with this id
-        String result = Downloader.getString("http://iswib.org/getWorkshops.php?id=" + id, this);
+        String result = Downloader.getString("http://iswib.org/api/getWorkshops.php?id=" + id, this);
 
         // parse the result and put every value into variable
         try {

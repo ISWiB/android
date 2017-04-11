@@ -1,6 +1,7 @@
 package org.iswib.iswibexplorer.news;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,8 +35,12 @@ import org.iswib.iswibexplorer.settings.SettingsActivity;
 import org.iswib.iswibexplorer.web.Downloader;
 import org.iswib.iswibexplorer.web.NewsUpdater;
 import org.iswib.iswibexplorer.workshops.WorkshopsActivity;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -64,6 +69,13 @@ public class NewsActivity extends AppCompatActivity {
         return activity;
     }
 
+    /**
+     * Amount of news that will be loaded in news activity when refresh is clicked.
+     */
+    private static final int loadNewsAmount = 5;
+
+    private int lastIndexOfLoadedNews = 0;
+
     // constructor
     public NewsActivity() {
         activity = this;
@@ -87,177 +99,79 @@ public class NewsActivity extends AppCompatActivity {
         final Button news_button = (Button) findViewById(R.id.news_button);
         final RelativeLayout news_update = (RelativeLayout) findViewById(R.id.news_update);
 
-        // Check if the update has started
-        if(MainActivity.updating) {
-            // Check if the update is finished
-            if(MainActivity.newsFlag) {
-                if (news_update != null) {
-                    // Hide the news update info
-                    news_update.setVisibility(View.GONE);
-                }
-                // Load the data from the local database
-                loadNews();
-                // Button that will be displayed once news are loaded
-                if (news_button != null) {
-                    news_button.setVisibility(Button.VISIBLE);
-                }
-            } else {
-                // Check every x seconds if update is finished and load the news
-                final Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask(){
-                    private int loop = 0;
-                    @Override
-                    public void run(){
-                        if(MainActivity.newsFlag) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (news_button != null) {
-                                        news_button.setVisibility(Button.VISIBLE);
-                                    }
-                                    if (news_update != null) {
-                                        news_update.setVisibility(View.GONE);
-                                    }
-                                    loadNews();
-                                }
-                            });
-                            timer.cancel();
-                        } else {
-                            if(loop >= Downloader.LOOP) {
-                                timer.cancel();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LinearLayout container = (LinearLayout) findViewById(R.id.news_container);
-                                        TextView message = new TextView(activity);
-                                        message.setText(R.string.download_error);
-                                        message.setTextSize(20);
-                                        message.setGravity(Gravity.CENTER);
-                                        message.setPadding(0, 40, 0, 0);
-                                        if (container != null) {
-                                            container.addView(message, 0);
-                                        }
-                                        if (news_update != null) {
-                                            news_update.setVisibility(View.GONE);
-                                        }
-                                    }
-                                });
-                            }
-                            loop++;
-                        }
-                    }
-                },0, Downloader.TIMEOUT);
-            }
-        } else {
-            // if update was not started at all
-            if (news_update != null) {
-                // Hide the news update info
-                news_update.setVisibility(View.GONE);
-            }
-            // Load the data from the local database
-            if (news_button != null) {
-                news_button.setVisibility(Button.VISIBLE);
-            }
-            loadNews();
-        }
+        loadMoreNoView();
     }
 
+//      Uzima index od poslednje vesti koja je ucitana
+//      Ucitava sledecih x vesti, na primer 5.
     public void loadMore(View view) {
-        // Set the flag to false
-        MainActivity.newsFlag = false;
-
-        // Hide the button and show the update items
-        final Button news_button = (Button) findViewById(R.id.news_button);
-        final RelativeLayout news_update = (RelativeLayout) findViewById(R.id.news_update);
-        if (news_button != null) {
-            news_button.setVisibility(Button.INVISIBLE);
-        }
-        if (news_update != null) {
-            news_update.setVisibility(View.VISIBLE);
-        }
-
-        // Start download
-        if(Downloader.checkPermission(this)) {
-            // Update the news in background
-            NewsUpdater updaterN = new NewsUpdater(loaded + 1, this);
-            updaterN.execute();
-            // Check every x seconds if update is finished and load the news
-            final Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new TimerTask(){
-                @Override
-                public void run(){
-                    if(MainActivity.newsFlag) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (news_button != null) {
-                                    news_button.setVisibility(Button.VISIBLE);
-                                }
-                                if (news_update != null) {
-                                    news_update.setVisibility(View.GONE);
-                                }
-                                loadNews();
-                            }
-                        });
-                        timer.cancel();
-                    }
-                }
-            },0, Downloader.TIMEOUT);
-        } else {
-            if (news_button != null) {
-                news_button.setVisibility(Button.VISIBLE);
-            }
-            if (news_update != null) {
-                news_update.setVisibility(View.GONE);
-            }
-            loadNews();
-        }
+        loadMoreNoView();
     }
 
-    private void loadNews() {
-        // get the database instance
-        DatabaseHelper daHelper = DatabaseHelper.getInstance(this);
-        SQLiteDatabase db = daHelper.getReadableDatabase();
+    public void loadMoreNoView() {
 
-        // Select what columns to return
-        String[] tableColumns = {
-                NewsClass.ID,
-                NewsClass.TITLE,
-                NewsClass.TEXT,
-                NewsClass.IMAGE,
-                NewsClass.DATE
-        };
-
-        // sorting order
-        String sortOrder = NewsClass.ID + " DESC";
-
-        String selection;
-        if(last != null) {
-            selection = NewsClass.ID + "<" + last;
-        } else {
-            selection = null;
+        for(int i = lastIndexOfLoadedNews; i < loadNewsAmount; i++) {
+            loadNews(i);
         }
 
-        Cursor cursor = db.query(
-                NewsClass.TABLE_NAME,     // table
-                tableColumns,             // columns
-                selection,                // selection
-                null,                     // selection arguments
-                null,                     // group by
-                null,                     // having
-                sortOrder                 // order by
-        );
+        lastIndexOfLoadedNews += loadNewsAmount;
+    }
+
+//    Uzima konkretan ID i load-uje image i load-uje title.
+//    Loaduje konkretnu vest da se prikaze u news bar-u.
+//    Da se napravi da load-uje samo TITLE, sliku i datum.
+    private void loadNews(int id) {
+
+        // get all rows for news with this id
+        String result = Downloader.getString("http://iswib.org/api/getNews.php?id=" + id, this);
+        String title = "";
+        String text = "";
+        String image = "";
+        String date = "";
+        Bitmap img;
+
+        // parse the result and put every value into variable
+        try {
+            // this will create json array
+            JSONArray arr = new JSONArray(result);
+            // no need to loop as only one row will be returned
+            JSONObject json = arr.getJSONObject(0);
+            // get all fields from json object
+            title = json.getString("title");
+            text = json.getString("text");
+            image = json.getString("image");
+            date = json.getString("date");
+
+            // this will download the image
+            img = Downloader.getImage("http://iswib.org/" + image, this);
+            image = image.substring(image.lastIndexOf("/") + 1);
+            FileOutputStream out;
+            try {
+//               PROVERITI DA LI OVO SLJAKA, jer je bio CONTEXT, a ne THIS.
+                out = this.openFileOutput(NewsClass.PREFIX + image, Context.MODE_PRIVATE);
+                if (img != null) {
+                    img.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                }
+                out.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         // get the total number of rows returned
-        int rows = cursor.getCount();
-        int count = 0; // Count how many news are added
+//        int rows = cursor.getCount();
+//        int count = 0; // Count how many news are added
 
         // get the initial view with button
         LinearLayout container = (LinearLayout) findViewById(R.id.news_container);
         Button button = (Button)findViewById(R.id.news_button);
 
         if(rows == 0) {
-            // Database is empty
+            // **** FINA PODESAVANJA
             if (last == null) {
                 // Database is empty, show message
                 TextView message = new TextView(this);
@@ -289,9 +203,9 @@ public class NewsActivity extends AppCompatActivity {
                 }
             }
 
-            // for each news
+            // for each news OVO JE BITNO
             while(cursor.moveToNext()) {
-                // Read from database
+                // Read from database OVDE KORISTIMO GORE DEFINISANE STVARI
                 String id = cursor.getString(cursor.getColumnIndex(NewsClass.ID));
                 String title = cursor.getString(cursor.getColumnIndex(NewsClass.TITLE));
                 String text = cursor.getString(cursor.getColumnIndex(NewsClass.TEXT));
@@ -359,9 +273,6 @@ public class NewsActivity extends AppCompatActivity {
                     break;
             }
         }
-
-        // release the resources
-        cursor.close();
     }
 
     // open touched article

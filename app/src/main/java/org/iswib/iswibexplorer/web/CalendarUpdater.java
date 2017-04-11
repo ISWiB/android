@@ -51,7 +51,7 @@ public class CalendarUpdater extends AsyncTask<String, Void, String> {
          */
 
         // call the API script that will return all calendar ids
-        String result = Downloader.getString("http://iswib.org/getCalendar.php", this);
+        String result = Downloader.getString("http://iswib.org/api/getCalendar.php", this);
 
         if(result != null) {
             // parse the ids and put them in a list
@@ -161,7 +161,7 @@ public class CalendarUpdater extends AsyncTask<String, Void, String> {
     private void updateCalendar(String id, SQLiteDatabase db) {
 
         // Get all rows for calendar with this id
-        String result = Downloader.getString("http://iswib.org/getCalendar.php?id=" + id, this);
+        String result = Downloader.getString("http://iswib.org/api/getCalendar.php?id=" + id, this);
 
         // Parse the result and put every value into variable
         try {
