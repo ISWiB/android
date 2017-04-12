@@ -115,6 +115,50 @@ public class Downloader {
     }
 
     /**
+     * This method will send a request to server and return the response
+     *
+     * @param request url that will be executed
+     * @return response that is read from the server
+     */
+    public static String getString(String request) {
+
+        Log.i("QWERTY", request);
+        // result that will be returned
+        StringBuilder result = new StringBuilder();
+        // stuff for connection
+        URL url;
+        HttpURLConnection con;
+
+        try {
+            // form the url and open connection
+            url = new URL(request);
+            con = (HttpURLConnection)url.openConnection();
+
+            // stuff to read the response
+            InputStream in =
+                    con.getInputStream();
+            InputStreamReader reader = new InputStreamReader(in);
+
+            // read response character by character and write it to result
+            int data = reader.read();
+            while(data != -1) {
+                char current = (char)data;
+                result.append(current);
+                data = reader.read();
+            }
+
+            return result.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+
+    /**
      * This method will download an image from the internet and return it as a result
      *
      * @param request utl to the image
@@ -147,4 +191,38 @@ public class Downloader {
 
         return null;
     }
+
+    /**
+     * This method will download an image from the internet and return it as a result
+     *
+     * @param request utl to the image
+     * @return image that was downloaded
+     */
+    public static Bitmap getImage(String request) {
+
+        // stuff for connection
+        URL url;
+        HttpURLConnection con;
+
+        try {
+            // form the url and open connection
+            url = new URL(request);
+            con = (HttpURLConnection)url.openConnection();
+
+            // stuff to read the response
+            InputStream in = con.getInputStream();
+
+            // return an image parsed from the response
+            return BitmapFactory.decodeStream(in);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+
+
 }
