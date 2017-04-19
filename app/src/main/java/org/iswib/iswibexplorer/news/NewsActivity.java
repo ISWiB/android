@@ -1,38 +1,28 @@
 package org.iswib.iswibexplorer.news;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.StyleSpan;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.google.android.gms.vision.text.Line;
 
 import org.iswib.iswibexplorer.MainActivity;
 import org.iswib.iswibexplorer.R;
 import org.iswib.iswibexplorer.calendar.CalendarActivity;
 import org.iswib.iswibexplorer.database.NewsClass;
-import org.iswib.iswibexplorer.database.DatabaseHelper;
 import org.iswib.iswibexplorer.map.MapsActivity;
 import org.iswib.iswibexplorer.settings.SettingsActivity;
 import org.iswib.iswibexplorer.web.Downloader;
@@ -41,24 +31,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * The NewsActivity will display all the news from
  * the local android database. Each news article
  * can be accessed by tapping on it.
  *
- * @author Jovan
- * @version 1.1
+ * @author IT&D team
+ * @version 1.2
  */
 public class NewsActivity extends AppCompatActivity {
 
@@ -66,22 +50,14 @@ public class NewsActivity extends AppCompatActivity {
 
     // Fields for managing news loading
     public static int load_total = 5;   // How many news articles to display
-    private int loaded = 0;
 
     // make a static instance of activity that can be passed to async tasks
     public static NewsActivity activity;
-
-    // getter for the activity instance
-    public static Activity getActivity() {
-        return activity;
-    }
 
     /**
      * Amount of news that will be loaded in news activity when refresh is clicked.
      */
     private static final int loadNewsAmount = 5;
-
-    private NewsDownloaderTask task;
 
     private int lastIndexOfLoadedNews = 0;
 
@@ -127,7 +103,7 @@ public class NewsActivity extends AppCompatActivity {
     public void executeNewsDownloaderTask() {
         LinearLayout container = (LinearLayout) findViewById(R.id.news_container);
         WeakReference<LinearLayout> weakReference = new WeakReference<>(container);
-        task = new NewsDownloaderTask(weakReference);
+        NewsDownloaderTask task = new NewsDownloaderTask(weakReference);
         task.execute();
 
     }
@@ -197,13 +173,13 @@ public class NewsActivity extends AppCompatActivity {
 
         private WeakReference<LinearLayout> weakReference;
 
-        public NewsDownloaderTask(WeakReference<LinearLayout> weakReference) {
+        private NewsDownloaderTask(WeakReference<LinearLayout> weakReference) {
             this.weakReference = weakReference;
         }
 
         @Override
         protected ArrayList<View> doInBackground(String... urls) {
-            ArrayList<View> news_items = new ArrayList<>();
+            ArrayList<View> news_items;
             MainActivity.newsFlag = false;
             // Escape early if cancel() is called
             if (isCancelled()) {
@@ -310,11 +286,7 @@ public class NewsActivity extends AppCompatActivity {
                 }
                 out.close();
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
 
@@ -377,14 +349,4 @@ public class NewsActivity extends AppCompatActivity {
         }
 
     }
-
-    public ArrayList<Integer> getListOfNewsIds() {
-        return listOfNewsIds;
-    }
-
-    public void setListOfNewsIds(ArrayList<Integer> listOfNewsIds) {
-        this.listOfNewsIds = listOfNewsIds;
-    }
-
-
 }
