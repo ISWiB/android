@@ -71,7 +71,7 @@
     <string name="article_image">Article Image</string>
     <string name="article_gradient">Article Gradient</string>
     <string name="image_description">Image Description</string>
-    <string name="update_info">Updating… Please wait</string>
+    <string name="update_info">Loading more… Please wait</string>
     <string name="download_error">Error updating…</string>
 
     <!-- Strings related to Settings -->

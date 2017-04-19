@@ -43,7 +43,7 @@
                 android:background="@drawable/ripple_pink"
                 android:textColor="#ffffff"
                 android:textStyle="bold"
-                android:onClick="loadMore"
+                android:onClick="executeNewsDownloaderTask"
                 android:visibility="invisible" />
         </LinearLayout>
     </ScrollView>

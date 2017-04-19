@@ -36,7 +36,6 @@ import org.iswib.iswibexplorer.database.DatabaseHelper;
 import org.iswib.iswibexplorer.map.MapsActivity;
 import org.iswib.iswibexplorer.settings.SettingsActivity;
 import org.iswib.iswibexplorer.web.Downloader;
-import org.iswib.iswibexplorer.web.NewsUpdater;
 import org.iswib.iswibexplorer.workshops.WorkshopsActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -82,7 +81,14 @@ public class NewsActivity extends AppCompatActivity {
      */
     private static final int loadNewsAmount = 5;
 
-    private int lastIndexOfLoadedNews = 1;
+    private NewsDownloaderTask task;
+
+    private int lastIndexOfLoadedNews = 0;
+
+    /**
+     * All IDs of news stored in base.
+     */
+    private ArrayList<Integer> listOfNewsIds = new ArrayList<>();
 
     // constructor
     public NewsActivity() {
@@ -109,26 +115,29 @@ public class NewsActivity extends AppCompatActivity {
         //final RelativeLayout news_update = (RelativeLayout) findViewById(R.id.news_update);
 
         // get the initial view with button
-        LinearLayout container = (LinearLayout) findViewById(R.id.news_container);
-        WeakReference<LinearLayout> weakReference = new WeakReference<>(container);
 
 
         if(Downloader.checkPermission(this)) {
-            NewsDownloaderTask task = new NewsDownloaderTask(weakReference);
-            task.execute();
+            executeNewsDownloaderTask();
            // loadMoreNoView();
 //        TODO Fina porukica ako nema konekcije. :/
         }
+    }
+
+    public void executeNewsDownloaderTask() {
+        LinearLayout container = (LinearLayout) findViewById(R.id.news_container);
+        WeakReference<LinearLayout> weakReference = new WeakReference<>(container);
+        task = new NewsDownloaderTask(weakReference);
+        task.execute();
+
     }
 
 //      Uzima index od poslednje vesti koja je ucitana
 //      Ucitava sledecih x vesti, na primer 5.
     public void loadMore(View view) {
         // TODO another asyncTask
-        //loadMoreNoView();
+//        loadMoreNoView();
     }
-
-
 
     // open touched article
     public void openArticle(View view) {
@@ -184,13 +193,6 @@ public class NewsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-
-
-
-
-
     private class NewsDownloaderTask extends AsyncTask<String, Void, ArrayList<View>> {
 
         private WeakReference<LinearLayout> weakReference;
@@ -202,18 +204,52 @@ public class NewsActivity extends AppCompatActivity {
         @Override
         protected ArrayList<View> doInBackground(String... urls) {
             ArrayList<View> news_items = new ArrayList<>();
+            MainActivity.newsFlag = false;
             // Escape early if cancel() is called
             if (isCancelled()) {
                 return null;
             }
+            listOfNewsIds = getNewsIdsFromBase();
             news_items = loadMoreNoView();
             //return news_item;
             return news_items;
         }
 
+        /**
+         * Get all IDs of news from API.
+         * @return ArrayList<Integer></Integer>
+         */
+        protected ArrayList<Integer> getNewsIdsFromBase() {
+            String result = Downloader.getString("http://iswib.org/api/getNews.php");
+            ArrayList<Integer> listOfIds = new ArrayList<>();
+            try {
+                JSONArray jsonArray = new JSONArray(result);
+
+                for(int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    int id = Integer.parseInt(jsonObject.getString(NewsClass.ID));
+                    listOfIds.add(id);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return listOfIds;
+        }
+
+        protected void onPreExecute() {
+            findViewById(R.id.news_update).setVisibility(View.VISIBLE);
+            findViewById(R.id.news_button).setVisibility(View.INVISIBLE);
+        }
+
         protected void onPostExecute(ArrayList<View> news_items) {
 //            TODO spreman view i onda cemo ovde samo da ga ispisemo na nasoj aktivnosti
             //View news_item = null;
+            MainActivity.newsFlag = true;
+            findViewById(R.id.news_update).setVisibility(View.INVISIBLE);
+            findViewById(R.id.news_button).setVisibility(View.VISIBLE);
+
 
              //attach completed view to container
             if (weakReference.get() != null) {
@@ -226,10 +262,12 @@ public class NewsActivity extends AppCompatActivity {
             }
         }
 
+
+        // Ovde izmeniti da se napravi lepo ucitavanje.
         ArrayList<View> loadMoreNoView() {
             ArrayList<View> news_items = new ArrayList<>();
-            for(int i = lastIndexOfLoadedNews; i < loadNewsAmount; i++) {
-                news_items.add(loadNews(i));
+            for(int i = lastIndexOfLoadedNews; i < lastIndexOfLoadedNews + loadNewsAmount; i++) {
+                news_items.add(loadNews(listOfNewsIds.get(i)));
             }
 
             lastIndexOfLoadedNews += loadNewsAmount;
@@ -338,6 +376,14 @@ public class NewsActivity extends AppCompatActivity {
             // return news_item;
         }
 
+    }
+
+    public ArrayList<Integer> getListOfNewsIds() {
+        return listOfNewsIds;
+    }
+
+    public void setListOfNewsIds(ArrayList<Integer> listOfNewsIds) {
+        this.listOfNewsIds = listOfNewsIds;
     }
 
 

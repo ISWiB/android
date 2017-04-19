@@ -20,7 +20,6 @@ import org.iswib.iswibexplorer.notifications.NotificationValues;
 import org.iswib.iswibexplorer.workshops.WorkshopsActivity;
 import org.iswib.iswibexplorer.web.CalendarUpdater;
 import org.iswib.iswibexplorer.web.Downloader;
-import org.iswib.iswibexplorer.web.NewsUpdater;
 import org.iswib.iswibexplorer.web.WorkshopsUpdater;
 import org.iswib.iswibexplorer.workshops.WorkshopsArticle;
 
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 if(!newsFlag) {
                     // Show progress modal dialog
                     final ProgressDialog progress;
-                    progress = ProgressDialog.show(this, "Updating", "Please wait...", true);
+                    progress = ProgressDialog.show(this, "Loading...", "Please wait.", true);
                     // Check every x seconds if update is finished and load the news article
                     final Timer timer = new Timer();
                     timer.scheduleAtFixedRate(new TimerTask() {
