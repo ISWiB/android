@@ -18,8 +18,10 @@
     <TextView
         android:id="@+id/news_item_title"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_marginTop="80dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="130dp"
+        android:textStyle="bold"
+        android:textSize="24sp"
         android:background="@color/text_dim"
         android:textColor="#ffffff"
         android:paddingLeft="10dp"

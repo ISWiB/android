@@ -24,7 +24,7 @@ import java.io.FileInputStream;
  * The NewsArticle represents the single news item which displays all
  * the relevant info for that news
  *
- * @author Jovan
+ * @author ISWiB IT&D
  * @version 1.1
  */
 public class NewsArticle extends AppCompatActivity {

@@ -1,5 +1,6 @@
 package org.iswib.iswibexplorer.news;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,9 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -41,8 +41,8 @@ import java.util.ArrayList;
  * the local android database. Each news article
  * can be accessed by tapping on it.
  *
- * @author IT&D team
- * @version 1.2
+ * @author ISWiB IT&D
+ * @version 1.1
  */
 public class NewsActivity extends AppCompatActivity {
 
@@ -50,14 +50,22 @@ public class NewsActivity extends AppCompatActivity {
 
     // Fields for managing news loading
     public static int load_total = 5;   // How many news articles to display
+    private int loaded = 0;
 
     // make a static instance of activity that can be passed to async tasks
     public static NewsActivity activity;
+
+    // getter for the activity instance
+    public static Activity getActivity() {
+        return activity;
+    }
 
     /**
      * Amount of news that will be loaded in news activity when refresh is clicked.
      */
     private static final int loadNewsAmount = 5;
+
+    private NewsDownloaderTask task;
 
     private int lastIndexOfLoadedNews = 0;
 
@@ -94,16 +102,16 @@ public class NewsActivity extends AppCompatActivity {
 
 
         if(Downloader.checkPermission(this)) {
-            executeNewsDownloaderTask();
+            executeNewsDownloaderTask(null);
            // loadMoreNoView();
 //        TODO Fina porukica ako nema konekcije. :/
         }
     }
 
-    public void executeNewsDownloaderTask() {
+    public void executeNewsDownloaderTask(View view) {
         LinearLayout container = (LinearLayout) findViewById(R.id.news_container);
         WeakReference<LinearLayout> weakReference = new WeakReference<>(container);
-        NewsDownloaderTask task = new NewsDownloaderTask(weakReference);
+        task = new NewsDownloaderTask(weakReference);
         task.execute();
 
     }
@@ -173,13 +181,13 @@ public class NewsActivity extends AppCompatActivity {
 
         private WeakReference<LinearLayout> weakReference;
 
-        private NewsDownloaderTask(WeakReference<LinearLayout> weakReference) {
+        public NewsDownloaderTask(WeakReference<LinearLayout> weakReference) {
             this.weakReference = weakReference;
         }
 
         @Override
         protected ArrayList<View> doInBackground(String... urls) {
-            ArrayList<View> news_items;
+            ArrayList<View> news_items = new ArrayList<>();
             MainActivity.newsFlag = false;
             // Escape early if cancel() is called
             if (isCancelled()) {
@@ -272,11 +280,11 @@ public class NewsActivity extends AppCompatActivity {
                 JSONObject json = arr.getJSONObject(0);
                 // get all fields from json object
                 title = json.getString("title");
-                image = json.getString("image");
+                image = json.getString("news");
                 date = json.getString("date");
 
                 // this will download the image
-                bitmapImage = Downloader.getImage("http://iswib.org/" + image);
+                bitmapImage = Downloader.getImage("http://iswib.org/images/news/" + image);
                 image = image.substring(image.lastIndexOf("/") + 1);
                 FileOutputStream out;
 //TODO               PROVERITI DA LI OVO SLJAKA, jer je bio CONTEXT, a ne THIS.
@@ -286,7 +294,11 @@ public class NewsActivity extends AppCompatActivity {
                 }
                 out.close();
 
-            } catch (JSONException | IOException e) {
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -321,17 +333,18 @@ public class NewsActivity extends AppCompatActivity {
 
             // load the image
             ImageView item_image = (ImageView) news_item.findViewById(R.id.news_item_image);
-            item_image.setImageBitmap(bitmapImage);
+//          Scale image to be smaller so it could fit into 4096x4096 if it doesn't.
+            int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()) );
+            Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
+            item_image.setImageBitmap(scaled);
 
             // load the title
             TextView item_title = (TextView) news_item.findViewById(R.id.news_item_title);
-            SpannableString span = new SpannableString(title);
-            span.setSpan(new AbsoluteSizeSpan(35), 0, title.length(), 0); // set size
-            span.setSpan(new StyleSpan(Typeface.BOLD), 0, title.length(), 0);
-            item_title.setText(span);
+            item_title.setText(title);
             item_title.setTypeface(Typeface.createFromAsset(getAssets(), "roboto.ttf"));
 
             // load the date
+            Log.i("DATEDATE", date);
             TextView item_date = (TextView) news_item.findViewById(R.id.news_item_date);
             item_date.setText(date);
 
@@ -349,4 +362,13 @@ public class NewsActivity extends AppCompatActivity {
         }
 
     }
+
+    public ArrayList<Integer> getListOfNewsIds() {
+        return listOfNewsIds;
+    }
+
+    public void setListOfNewsIds(ArrayList<Integer> listOfNewsIds) {
+        this.listOfNewsIds = listOfNewsIds;
+    }
+
 }
