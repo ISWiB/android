@@ -23,8 +23,8 @@ import java.util.Calendar;
  * The CalendarUpdater updates the calendar from the internet and stores it to
  * the local android database only if version of the calendar day is not the same
  *
- * @author Jovan
- * @version 1.1
+ * @author ISWiB IT&D
+ * @version 2.1
  */
 public class CalendarUpdater extends AsyncTask<String, Void, String> {
 
@@ -205,7 +205,7 @@ public class CalendarUpdater extends AsyncTask<String, Void, String> {
             // Download "first" data
             if(!first_image.equals("null")) {
                 Bitmap img = Downloader.getImage("http://iswib.org/" + first_image, this);
-                first_image = first_image.substring(first_image.lastIndexOf("/") + 1);
+                /*first_image = first_image.substring(first_image.lastIndexOf("/") + 1);
                 FileOutputStream out;
                 try {
                     out = context.openFileOutput(CalendarClass.PREFIX + first_image, Context.MODE_PRIVATE);
@@ -217,9 +217,9 @@ public class CalendarUpdater extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
 
-                values.put(CalendarClass.FIRST_IMAGE, CalendarClass.PREFIX + first_image);
+                values.put(CalendarClass.FIRST_IMAGE, CalendarClass.PREFIX + first_image); */
             } else {
-                values.put(CalendarClass.FIRST_IMAGE, "null");
+                //values.put(CalendarClass.FIRST_IMAGE, "null");
             }
             values.put(CalendarClass.FIRST_TITLE, first_title);
             values.put(CalendarClass.FIRST_TEXT, first_text);
@@ -228,7 +228,7 @@ public class CalendarUpdater extends AsyncTask<String, Void, String> {
             // Download "second" data
             if(!second_image.equals("null")) {
                 Bitmap img = Downloader.getImage("http://iswib.org/" + second_image, this);
-                second_image = second_image.substring(second_image.lastIndexOf("/") + 1);
+                /*second_image = second_image.substring(second_image.lastIndexOf("/") + 1);
                 FileOutputStream out;
                 try {
                     out = context.openFileOutput(CalendarClass.PREFIX + second_image, Context.MODE_PRIVATE);
@@ -240,9 +240,9 @@ public class CalendarUpdater extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
 
-                values.put(CalendarClass.SECOND_IMAGE, CalendarClass.PREFIX + second_image);
+                values.put(CalendarClass.SECOND_IMAGE, CalendarClass.PREFIX + second_image);*/
             } else {
-                values.put(CalendarClass.SECOND_IMAGE, "null");
+                //values.put(CalendarClass.SECOND_IMAGE, "null");
             }
             values.put(CalendarClass.SECOND_TITLE, second_title);
             values.put(CalendarClass.SECOND_TEXT, second_text);
@@ -251,7 +251,7 @@ public class CalendarUpdater extends AsyncTask<String, Void, String> {
             // Download "third" data
             if(!third_image.equals("null")) {
                 Bitmap img = Downloader.getImage("http://iswib.org/" + third_image, this);
-                third_image = third_image.substring(third_image.lastIndexOf("/") + 1);
+                /*third_image = third_image.substring(third_image.lastIndexOf("/") + 1);
                 FileOutputStream out;
                 try {
                     out = context.openFileOutput(CalendarClass.PREFIX + third_image, Context.MODE_PRIVATE);
@@ -263,9 +263,9 @@ public class CalendarUpdater extends AsyncTask<String, Void, String> {
                     e.printStackTrace();
                 }
 
-                values.put(CalendarClass.THIRD_IMAGE, CalendarClass.PREFIX + third_image);
+                values.put(CalendarClass.THIRD_IMAGE, CalendarClass.PREFIX + third_image);*/
             } else {
-                values.put(CalendarClass.THIRD_IMAGE, "null");
+                //values.put(CalendarClass.THIRD_IMAGE, "null");
             }
             values.put(CalendarClass.THIRD_TITLE, third_title);
             values.put(CalendarClass.THIRD_TEXT, third_text);

@@ -2,19 +2,17 @@ package org.iswib.iswibexplorer.calendar;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.preference.PreferenceActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,25 +22,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.iswib.iswibexplorer.dialogs.DialogDays;
-import org.iswib.iswibexplorer.MainActivity;
 import org.iswib.iswibexplorer.R;
 import org.iswib.iswibexplorer.database.CalendarClass;
-import org.iswib.iswibexplorer.database.DatabaseHelper;
 import org.iswib.iswibexplorer.map.MapsActivity;
 import org.iswib.iswibexplorer.news.NewsActivity;
 import org.iswib.iswibexplorer.settings.SettingsActivity;
 import org.iswib.iswibexplorer.web.Downloader;
 import org.iswib.iswibexplorer.workshops.WorkshopsActivity;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.FileInputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * The CalendarActivity displays days of the festival and corresponding schedule
@@ -54,7 +48,7 @@ import java.util.TimerTask;
 public class CalendarActivity extends AppCompatActivity {
 
     // make a static instance of activity that can be passed to async tasks
-    public static CalendarActivity activity;
+//    public static CalendarActivity activity;
 
     // Tag
     public static String CALENDAR_DAY = "id";
@@ -66,19 +60,20 @@ public class CalendarActivity extends AppCompatActivity {
     private Integer id = null;          // This will tell what day is selected
 
     // Getter for the activity instance
-    public static Activity getActivity() {
-        return activity;
-    }
+   // public static Activity getActivity() {
+      //  return activity;
+    //}
 
     // constructor
-    public CalendarActivity() {
-        activity = this;
-    }
+//    public CalendarActivity() {
+//        activity = this;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+        Log.i("tag", "ovde1");
 
         // This will display message if database is empty
         message_empty = new TextView(this);
@@ -101,355 +96,36 @@ public class CalendarActivity extends AppCompatActivity {
 
         final RelativeLayout calendar_update = (RelativeLayout) findViewById(R.id.calendar_update);
 
-        // Check if the update has started
-        if(MainActivity.updating) {
-            // Check if the update is finished
-            if (MainActivity.calendarFlag) {
-                // If finished
-                if (calendar_update != null) {
-                    // Hide the calendar update info
-                    calendar_update.setVisibility(View.GONE);
-                }
-                // Load the data from the local database
-                loadCalendar(id);
-            } else {
-                // Check every x seconds if update is finished and load the calendar using handler
-                final Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (MainActivity.calendarFlag) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    message_empty.setVisibility(TextView.GONE);
-                                    if (calendar_update != null) {
-                                        calendar_update.setVisibility(View.GONE);
-                                    }
-                                    loadCalendar(id);
-                                }
-                            });
-                            timer.cancel();
-                        }
-                    }
-                }, 0, Downloader.TIMEOUT);
-            }
-        } else {
-            // if update was not started at all
-            if (calendar_update != null) {
-                // Hide the calendar update info
-                calendar_update.setVisibility(View.GONE);
-            }
-            // Load the data from the local database
-            loadCalendar(id);
+        // Get the date position ranging from -1 to total amount of festival days TODO
+        int position = 1;
+
+        // Update the calendar in background
+        if(Downloader.checkPermission(this)) {
+            Log.i("tag", "ovde2");
+            executeCalendarDownloaderTask(position);
+            // loadMoreNoView();
+//        TODO Fina porukica ako nema konekcije. :/
         }
+
+
+
+        // If finished
+        if (calendar_update != null) {
+            // Hide the calendar update info
+            calendar_update.setVisibility(View.GONE);
+        }
+        // Load the data from the local database
+        //loadCalendar(id);
+
+
     }
 
-    /**
-     * This method will update the calendar activity with data from database
-     *
-     */
-    public void loadCalendar(Integer id) {
-        // get the database instance
-        DatabaseHelper daHelper = DatabaseHelper.getInstance(this);
-        SQLiteDatabase db = daHelper.getReadableDatabase();
-
-        // Select what columns to return
-        String[] tableColumns = {
-                CalendarClass.ID,
-                CalendarClass.VERSION,
-                CalendarClass.DATE,
-                CalendarClass.FIRST_TITLE,
-                CalendarClass.FIRST_TEXT,
-                CalendarClass.FIRST_IMAGE,
-                CalendarClass.FIRST_TIME,
-                CalendarClass.SECOND_TITLE,
-                CalendarClass.SECOND_TEXT,
-                CalendarClass.SECOND_IMAGE,
-                CalendarClass.SECOND_TIME,
-                CalendarClass.THIRD_TITLE,
-                CalendarClass.THIRD_TEXT,
-                CalendarClass.THIRD_IMAGE,
-                CalendarClass.THIRD_TIME,
-                CalendarClass.BREAKFAST,
-                CalendarClass.LUNCH,
-                CalendarClass.DINNER,
-                CalendarClass.WORKSHOPS
-        };
-
-        // sorting order
-        String sortOrder = CalendarClass.ID + " ASC";
-
-        Cursor cursor = db.query(
-                CalendarClass.TABLE_NAME,       // table
-                tableColumns,                   // columns
-                CalendarClass.ID,               // selection
-                null,                           // selection arguments
-                null,                           // group by
-                null,                           // having
-                sortOrder                       // order by
-        );
-
-        // get the total number of rows returned
-        int rows = cursor.getCount();
-
-        // get the initial view
-        final LinearLayout calendar_item_container = (LinearLayout) findViewById(R.id.calendar_item_container);
-
-        if(rows == 0) {
-            // Database is empty, show message
-            message_empty.setText(R.string.calendar_database_empty);
-            message_empty.setTextSize(20);
-            message_empty.setGravity(Gravity.CENTER);
-            message_empty.setPadding(0, 40, 0, 0);
-            if (calendar_item_container != null) {
-                calendar_item_container.addView(message_empty);
-            }
-
-        } else {
-            // Get the id if not provided
-            if(id == null) {
-                // Go to first day to get the date
-                cursor.moveToNext();
-
-                // Get the id of calendar that is closest to today
-                TimeZone.setDefault(TimeZone.getTimeZone("Europe/London"));
-
-                // Time now
-                Date now = Calendar.getInstance().getTime();
-
-                // First day of the festival
-                String date_string = cursor.getString(cursor.getColumnIndex(CalendarClass.DATE));
-
-                // Set the format that will be expected
-                SimpleDateFormat date_format = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-
-                // Parse the date
-                Date first_day = null;
-                try {
-                    first_day = date_format.parse(date_string);
-                    //now = date_format.parse("28-JUL-2016");//TODO
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                // If first_day was parsed correctly
-                if (first_day != null) {
-
-                    // Get the date position ranging from -1 to total amount of festival days
-                    int position = getDayPosition(now, first_day);
-
-                    // Check boundaries
-                    if (position > -1 && position <= CalendarClass.DAYS) {
-                        // Position is valid
-                        id = position;
-                    } else {
-                        id = 0;
-                    }
-                } else {
-                    // Error parsing, so load a first day
-                    id = 0;
-                }
-            }
-
-            // Set the day picker
-            TextView calendar_header = (TextView) findViewById(R.id.calendar_header);
-            if (calendar_header != null) {
-                switch (id) {
-                    case 0:
-                        calendar_header.setText(R.string.day_1);
-                        break;
-                    case 1:
-                        calendar_header.setText(R.string.day_2);
-                        break;
-                    case 2:
-                        calendar_header.setText(R.string.day_3);
-                        break;
-                    case 3:
-                        calendar_header.setText(R.string.day_4);
-                        break;
-                    case 4:
-                        calendar_header.setText(R.string.day_5);
-                        break;
-                    case 5:
-                        calendar_header.setText(R.string.day_6);
-                        break;
-                    case 6:
-                        calendar_header.setText(R.string.day_7);
-                        break;
-                    case 7:
-                        calendar_header.setText(R.string.day_8);
-                        break;
-                }
-                calendar_header.setVisibility(View.VISIBLE);
-            }
-
-            // Go to zero-based position and read the calendar
-            cursor.moveToPosition(id);
-
-            // Mark the selected day
-            this.id = id;
-
-            // Show date
-            TextView calendar_date = (TextView) findViewById(R.id.calendar_date);
-            String date = cursor.getString(cursor.getColumnIndex(CalendarClass.DATE));
-            if (calendar_date != null) {
-                // Append a date and arrow down sign that users know it can be clicked
-                String str = "\u25be " + date.substring(0, 6);
-                calendar_date.setText(str);
-            }
-
-            // Read schedule from database
-            String breakfast = cursor.getString(cursor.getColumnIndex(CalendarClass.BREAKFAST));
-            String lunch = cursor.getString(cursor.getColumnIndex(CalendarClass.LUNCH));
-            String dinner = cursor.getString(cursor.getColumnIndex(CalendarClass.DINNER));
-            String workshops = cursor.getString(cursor.getColumnIndex(CalendarClass.WORKSHOPS));
-
-            // Find the views to populate data with
-            TextView calendar_schedule_left = (TextView) findViewById(R.id.calendar_schedule_left);
-            TextView calendar_schedule_right = (TextView) findViewById(R.id.calendar_schedule_right);
-
-            // Add data to views
-            if(calendar_schedule_left != null) {
-                // Remove any previous text
-                calendar_schedule_left.setText("");
-                // Add new text
-                if(!breakfast.equals("null"))
-                    // Add breakfast
-                    calendar_schedule_left.append(getString(R.string.schedule_breakfast) + ": " + breakfast);
-                if(!lunch.equals("null")) {
-                    // If breakfast was added add a new line separator as well
-                    if(!breakfast.equals("null"))
-                        calendar_schedule_left.append("\n");
-                    // Add lunch
-                    calendar_schedule_left.append(getString(R.string.schedule_lunch) + ": " + lunch);
-                }
-                if(!dinner.equals("null")) {
-                    // If lunch was added add a new line separator as well
-                    if(!breakfast.equals("null"))
-                        calendar_schedule_left.append("\n");
-                    // Add dinner
-                    calendar_schedule_left.append(getString(R.string.schedule_dinner) + ": " + dinner);
-                }
-            }
-
-            if(calendar_schedule_right != null) {
-                // Remove any previous text
-                calendar_schedule_right.setText("");
-                // Hide work icon
-                ImageView calendar_schedule_work = (ImageView) findViewById(R.id.calendar_schedule_work);
-                if (calendar_schedule_work != null) {
-                    calendar_schedule_work.setVisibility(View.INVISIBLE);
-                }
-                // Add new test
-                if(!workshops.equals("null")) {
-                    // Add workshops
-                    calendar_schedule_right.append(getString(R.string.schedule_workshops) + ": " + workshops);
-                    if (calendar_schedule_work != null) {
-                        // Show work icon
-                        calendar_schedule_work.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-
-            // Add "first", "second" and "third" data
-            for(int i = 1; i <= 3; i++) {
-                String title;
-                String text;
-                String image;
-                String time;
-
-                if(i == 3) {
-                    title = cursor.getString(cursor.getColumnIndex(CalendarClass.THIRD_TITLE));
-                    text = cursor.getString(cursor.getColumnIndex(CalendarClass.THIRD_TEXT));
-                    image = cursor.getString(cursor.getColumnIndex(CalendarClass.THIRD_IMAGE));
-                    time = cursor.getString(cursor.getColumnIndex(CalendarClass.THIRD_TIME));
-                } else if(i == 2) {
-                    title = cursor.getString(cursor.getColumnIndex(CalendarClass.SECOND_TITLE));
-                    text = cursor.getString(cursor.getColumnIndex(CalendarClass.SECOND_TEXT));
-                    image = cursor.getString(cursor.getColumnIndex(CalendarClass.SECOND_IMAGE));
-                    time = cursor.getString(cursor.getColumnIndex(CalendarClass.SECOND_TIME));
-                } else {
-                    title = cursor.getString(cursor.getColumnIndex(CalendarClass.FIRST_TITLE));
-                    text = cursor.getString(cursor.getColumnIndex(CalendarClass.FIRST_TEXT));
-                    image = cursor.getString(cursor.getColumnIndex(CalendarClass.FIRST_IMAGE));
-                    time = cursor.getString(cursor.getColumnIndex(CalendarClass.FIRST_TIME));
-                }
-
-                if (!image.equals("null")) {
-
-                    // add calendar item
-                    final View calendar_item = getLayoutInflater().inflate(R.layout.calendar_item, calendar_item_container, false);
-
-                    // load the image
-                    ImageView item_image = (ImageView) calendar_item.findViewById(R.id.calendar_item_image);
-                    Bitmap bitmap = null;
-                    try {
-                        // Load the file
-                        FileInputStream stream = this.openFileInput(image);
-
-                        // Set the lower quality of images for better performance
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inPreferredConfig = Bitmap.Config.RGB_565;
-
-                        // Load the image with options for lower quality
-                        bitmap = BitmapFactory.decodeStream(stream, null, options);
-
-                        // Close the stream
-                        stream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    item_image.setImageBitmap(bitmap);
-
-                    // load the title
-                    TextView item_title_left = (TextView) calendar_item.findViewById(R.id.calendar_item_title_left);
-                    if (title.contains(CalendarClass.SEPARATOR)) {
-                        String titles[] = title.split(CalendarClass.SEPARATOR);
-                        TextView item_title_right = (TextView) calendar_item.findViewById(R.id.calendar_item_title_right);
-                        item_title_left.setTextSize(18);
-                        item_title_right.setTextSize(18);
-                        item_title_left.setText(titles[0]);
-                        item_title_right.setText(titles[1]);
-                    } else {
-                        item_title_left.setTextSize(25);
-                        item_title_left.setText(title);
-                    }
-
-                    // load the date
-                    TextView item_date_left = (TextView) calendar_item.findViewById(R.id.calendar_item_date_left);
-                    if (time.contains(CalendarClass.SEPARATOR)) {
-                        String dates[] = time.split(CalendarClass.SEPARATOR);
-                        TextView item_date_right = (TextView) calendar_item.findViewById(R.id.calendar_item_date_right);
-                        item_date_left.setText(dates[0]);
-                        item_date_right.setText(dates[1]);
-                    } else {
-                        item_date_left.setText(time);
-                    }
-
-                    // load the text
-                    TextView item_text = (TextView) calendar_item.findViewById(R.id.calendar_item_text);
-                    item_text.setTypeface(Typeface.createFromAsset(getAssets(), "roboto.ttf"));
-                    text = text.replaceAll("<li>", "<br>&#149;&nbsp;");
-                    item_text.setLinkTextColor(Color.BLUE);
-                    item_text.setText(Html.fromHtml(text));
-
-                    // attach completed view to container
-                    if (calendar_item_container != null) {
-                        calendar_item_container.addView(calendar_item);
-                    }
-                }
-            }
-
-            // Get and show the schedule
-            LinearLayout calendar_schedule = (LinearLayout) findViewById(R.id.calendar_schedule);
-            if (calendar_schedule != null) {
-                calendar_schedule.setVisibility(View.VISIBLE);
-            }
-        }
-
-        // release the resources
-        cursor.close();
+    public void executeCalendarDownloaderTask(int position) {
+        //LinearLayout container = (LinearLayout) findViewById(R.id.calendar_container);
+        LinearLayout calendar_item_container = (LinearLayout) findViewById(R.id.calendar_item_container);
+        WeakReference<LinearLayout> weakReference = new WeakReference<>(calendar_item_container);
+        CalendarDownloaderTask task = new CalendarDownloaderTask(weakReference, position);
+        task.execute();
     }
 
     /**
@@ -530,15 +206,300 @@ public class CalendarActivity extends AppCompatActivity {
         // If not already on the same day
         if (pick == CalendarClass.DAYS && pick != id) {
             clearCalendar();
-            loadCalendar(null);
+            executeCalendarDownloaderTask(0);
         } else if(pick != id) {
             clearCalendar();
-            loadCalendar(pick);
+            executeCalendarDownloaderTask(pick);
         }
 
         // Close the dialog
         dialog.dismiss();
     }
+
+
+    private class CalendarDownloaderTask extends AsyncTask<String, Void, ArrayList<View>> {
+
+        private WeakReference<LinearLayout> weakReference;
+        private int position;
+
+        private CalendarDownloaderTask(WeakReference<LinearLayout> weakReference, int position) {
+            this.weakReference = weakReference;
+            this.position = position;
+        }
+
+        //private Context context;
+
+
+        @Override
+        protected synchronized ArrayList<View> doInBackground(String... params) {
+
+            // call the API script that will return all calendar ids
+            //String result = Downloader.getString("http://iswib.org/api/getCalendar.php", this);
+            loadCalendarDay(position);
+
+            //return result;
+
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<View> calendar_items) {
+            super.onPostExecute(calendar_items);
+
+            // Mark that the update is finished
+            //MainActivity.calendarFlag = true;
+            if (weakReference.get() != null) {
+                for(View calendar_item : calendar_items) {
+                    // as the last view is a button to add more news, add the news item before the button
+                    weakReference.get().addView(calendar_item);
+                }
+//            TODO Proveriti da li nam je ovo potrebno, ako ne skloniti
+//            loaded++;
+            }
+
+            // Get and show the schedule
+            LinearLayout calendar_schedule = (LinearLayout) findViewById(R.id.calendar_schedule);
+            if (calendar_schedule != null) {
+                calendar_schedule.setVisibility(View.VISIBLE);
+            }
+
+            TextView calendar_header = (TextView) findViewById(R.id.calendar_header);
+            calendar_header.setVisibility(View.VISIBLE);
+
+            Log.i("CalendarUpdate", "Finished");
+        }
+
+        private ArrayList<View> loadCalendarDay(int id) {
+
+            // Get all rows for calendar with this id
+            String result = Downloader.getString("http://iswib.org/api/getCalendar.php?id=" + id, this);
+
+            // Parse the result and put every value into variable
+            try {
+                // this will create json array
+                JSONArray arr = new JSONArray(result);
+                // no need to loop as only one row will be returned
+                JSONObject json = arr.getJSONObject(0);
+                // get all fields from json object
+                //String version = json.getString(CalendarClass.VERSION); TODO
+                String date = json.getString(CalendarClass.DATE);
+                String breakfast = json.getString(CalendarClass.BREAKFAST);
+                String lunch = json.getString(CalendarClass.LUNCH);
+                String dinner = json.getString(CalendarClass.DINNER);
+                String workshops = json.getString(CalendarClass.WORKSHOPS);
+
+                String first_image = json.getString(CalendarClass.FIRST_IMAGE);
+                String first_title = json.getString(CalendarClass.FIRST_TITLE);
+                String first_text = json.getString(CalendarClass.FIRST_TEXT);
+                String first_time = json.getString(CalendarClass.FIRST_TIME);
+
+                String second_image = json.getString(CalendarClass.SECOND_IMAGE);
+                String second_title = json.getString(CalendarClass.SECOND_TITLE);
+                String second_text = json.getString(CalendarClass.SECOND_TEXT);
+                String second_time = json.getString(CalendarClass.SECOND_TIME);
+
+                String third_image = json.getString(CalendarClass.THIRD_IMAGE);
+                String third_title = json.getString(CalendarClass.THIRD_TITLE);
+                String third_text = json.getString(CalendarClass.THIRD_TEXT);
+                String third_time = json.getString(CalendarClass.THIRD_TIME);
+
+                // Download "first" data
+                Bitmap img1 = null;
+                if (!first_image.equals("null")) {
+                     img1 = Downloader.getImage("http://iswib.org/" + first_image, this);
+                }
+                // Download "second" data
+                Bitmap img2 = null;
+                if (!second_image.equals("null")) {
+                    img1 = Downloader.getImage("http://iswib.org/" + second_image, this);
+                }
+
+                // Download "third" data
+                Bitmap img3 = null;
+                if (!third_image.equals("null")) {
+                    img3 = Downloader.getImage("http://iswib.org/" + third_image, this);
+                }
+
+                // Set the day picker
+                TextView calendar_header = (TextView) findViewById(R.id.calendar_header);
+                if (calendar_header != null) {
+                    switch (id) {
+                        case 0:
+                            calendar_header.setText(R.string.day_1);
+                            break;
+                        case 1:
+                            calendar_header.setText(R.string.day_2);
+                            break;
+                        case 2:
+                            calendar_header.setText(R.string.day_3);
+                            break;
+                        case 3:
+                            calendar_header.setText(R.string.day_4);
+                            break;
+                        case 4:
+                            calendar_header.setText(R.string.day_5);
+                            break;
+                        case 5:
+                            calendar_header.setText(R.string.day_6);
+                            break;
+                        case 6:
+                            calendar_header.setText(R.string.day_7);
+                            break;
+                        case 7:
+                            calendar_header.setText(R.string.day_8);
+                            break;
+                    }
+                }
+
+                // Show date
+                TextView calendar_date = (TextView) findViewById(R.id.calendar_date);
+                if (calendar_date != null) {
+                    // Append a date and arrow down sign that users know it can be clicked
+                    String str = "\u25be " + date.substring(0, 6);
+                    calendar_date.setText(str);
+                }
+
+                // Populate schedule
+                //final LinearLayout calendar_item_container = (LinearLayout) findViewById(R.id.calendar_item_container);
+
+                // Find the views to populate data with
+                TextView calendar_schedule_left = (TextView) findViewById(R.id.calendar_schedule_left);
+                TextView calendar_schedule_right = (TextView) findViewById(R.id.calendar_schedule_right);
+
+                // Add data to views
+                if(calendar_schedule_left != null) {
+                    // Remove any previous text
+                    calendar_schedule_left.setText("");
+                    // Add new text
+                    if(!breakfast.equals("null"))
+                        // Add breakfast
+                        calendar_schedule_left.append(getString(R.string.schedule_breakfast) + ": " + breakfast);
+                    if(!lunch.equals("null")) {
+                        // If breakfast was added add a new line separator as well
+                        if(!breakfast.equals("null"))
+                            calendar_schedule_left.append("\n");
+                        // Add lunch
+                        calendar_schedule_left.append(getString(R.string.schedule_lunch) + ": " + lunch);
+                    }
+                    if(!dinner.equals("null")) {
+                        // If lunch was added add a new line separator as well
+                        if(!breakfast.equals("null"))
+                            calendar_schedule_left.append("\n");
+                        // Add dinner
+                        calendar_schedule_left.append(getString(R.string.schedule_dinner) + ": " + dinner);
+                    }
+                }
+
+                if(calendar_schedule_right != null) {
+                    // Remove any previous text
+                    calendar_schedule_right.setText("");
+                    // Hide work icon
+                    ImageView calendar_schedule_work = (ImageView) findViewById(R.id.calendar_schedule_work);
+                    if (calendar_schedule_work != null) {
+                        calendar_schedule_work.setVisibility(View.INVISIBLE);
+                    }
+                    // Add new test
+                    if(!workshops.equals("null")) {
+                        // Add workshops
+                        calendar_schedule_right.append(getString(R.string.schedule_workshops) + ": " + workshops);
+                        if (calendar_schedule_work != null) {
+                            // Show work icon
+                            calendar_schedule_work.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+                ArrayList<View> calendar_items = new ArrayList<>();
+
+                // Add "first", "second" and "third" data
+                for(int i = 1; i <= 3; i++) {
+                    String title;
+                    String text;
+                    String image;
+                    String time;
+                    Bitmap img;
+
+                    if(i == 3) {
+                        title = first_title;
+                        text = first_text;
+                        image = first_image;
+                        time = first_time;
+                        img = img1;
+                    } else if(i == 2) {
+                        title = second_title;
+                        text = second_text;
+                        image = second_image;
+                        time = second_time;
+                        img = img2;
+                    } else {
+                        title = third_title;
+                        text = third_text;
+                        image = third_image;
+                        time = third_time;
+                        img = img3;
+                    }
+
+                    if (!image.equals("null")) {
+
+                        // add calendar item
+                        final View calendar_item = getLayoutInflater().inflate(R.layout.calendar_item, null, false); // TODO
+
+                        // load the image
+                        ImageView item_image = (ImageView) calendar_item.findViewById(R.id.calendar_item_image);
+                        item_image.setImageBitmap(img);
+
+                        // load the title // TODO
+                        TextView item_title_left = (TextView) calendar_item.findViewById(R.id.calendar_item_title_left);
+//                        if (title.contains(CalendarClass.SEPARATOR)) {
+//                            String titles[] = title.split(CalendarClass.SEPARATOR);
+//                            TextView item_title_right = (TextView) calendar_item.findViewById(R.id.calendar_item_title_right);
+//                            item_title_left.setTextSize(18);
+//                            item_title_right.setTextSize(18);
+//                            item_title_left.setText(titles[0]);
+//                            item_title_right.setText(titles[1]);
+//                        } else {
+                            item_title_left.setTextSize(25);
+                            item_title_left.setText(title);
+                       // }
+
+                        // load the date
+                        TextView item_date_left = (TextView) calendar_item.findViewById(R.id.calendar_item_date_left);
+//                        if (time.contains(CalendarClass.SEPARATOR)) {
+//                            String dates[] = time.split(CalendarClass.SEPARATOR);
+//                            TextView item_date_right = (TextView) calendar_item.findViewById(R.id.calendar_item_date_right);
+//                            item_date_left.setText(dates[0]);
+//                            item_date_right.setText(dates[1]);
+//                        } else {
+                            item_date_left.setText(time);
+                       // }
+
+                        // load the text
+                        TextView item_text = (TextView) calendar_item.findViewById(R.id.calendar_item_text);
+                        item_text.setTypeface(Typeface.createFromAsset(getAssets(), "roboto.ttf"));
+                        text = text.replaceAll("<li>", "<br>&#149;&nbsp;");
+                        item_text.setLinkTextColor(Color.BLUE);
+                        item_text.setText(Html.fromHtml(text));
+
+                        // attach completed view to container
+                        calendar_items.add(calendar_item);
+                    }
+                }
+
+                return calendar_items;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
