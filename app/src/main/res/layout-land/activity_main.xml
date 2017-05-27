@@ -9,7 +9,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/main_background"
         android:scaleType="centerCrop"
         android:contentDescription="@string/image_description"/>
 
@@ -21,8 +20,6 @@
         <ImageView
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:src="@drawable/iswib"
@@ -47,7 +44,7 @@
                     android:orientation="vertical"
                     android:layout_toLeftOf="@+id/main_strut_top"
                     android:layout_toStartOf="@+id/main_strut_top"
-                    android:background="@color/iswib_color_1_transparent"
+                    android:background="@color/iswib_color_1"
                     android:onClick="goTo">
 
                     <ImageView
@@ -83,7 +80,7 @@
                     android:orientation="vertical"
                     android:layout_toRightOf="@+id/main_strut_top"
                     android:layout_toEndOf="@+id/main_strut_top"
-                    android:background="@color/iswib_color_4_transparent"
+                    android:background="@color/iswib_color_4"
                     android:onClick="goTo">
 
                     <ImageView
@@ -120,7 +117,7 @@
                     android:orientation="vertical"
                     android:layout_toLeftOf="@+id/main_strut_bottom"
                     android:layout_toStartOf="@+id/main_strut_bottom"
-                    android:background="@color/iswib_color_3_transparent"
+                    android:background="@color/iswib_color_3"
                     android:onClick="goTo">
 
                     <ImageView
@@ -156,7 +153,7 @@
                     android:orientation="vertical"
                     android:layout_toRightOf="@+id/main_strut_bottom"
                     android:layout_toEndOf="@+id/main_strut_bottom"
-                    android:background="@color/iswib_color_2_transparent"
+                    android:background="@color/iswib_color_2"
                     android:onClick="goTo">
 
                     <ImageView
