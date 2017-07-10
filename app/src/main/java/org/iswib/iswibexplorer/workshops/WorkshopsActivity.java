@@ -37,7 +37,7 @@ import java.util.TimerTask;
  * The WorkshopsActivity displays workshops of the festival and lets
  * you open each of them to read more.
  *
- * @author Jovan
+ * @author ISWiB IT&D
  * @version 1.1
  */
 public class WorkshopsActivity extends AppCompatActivity {

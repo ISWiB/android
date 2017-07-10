@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.iswib.iswibexplorer.MainActivity;
 import org.iswib.iswibexplorer.dialogs.DialogDays;
 import org.iswib.iswibexplorer.R;
 import org.iswib.iswibexplorer.database.CalendarClass;
@@ -42,13 +43,10 @@ import java.util.Date;
  * The CalendarActivity displays days of the festival and corresponding schedule
  * one at a time, and lets you pick different days
  *
- * @author Jovan
+ * @author ISWiB IT&D
  * @version 1.1
  */
 public class CalendarActivity extends AppCompatActivity {
-
-    // make a static instance of activity that can be passed to async tasks
-//    public static CalendarActivity activity;
 
     // Tag
     public static String CALENDAR_DAY = "id";
@@ -56,18 +54,19 @@ public class CalendarActivity extends AppCompatActivity {
     // Dialog for day picking
     private DialogDays dialog = new DialogDays();
 
+
+    // make a static instance of activity that can be passed to async tasks
+    public static CalendarActivity activity;
+
+    // getter for the activity instance singletone
+    public static Activity getActivity() { return activity; }
+
+    private ArrayList<Integer> listOfCalendarIds = new ArrayList<>();
+
+    private ArrayList<View> pub_calendar_items = new ArrayList<>();
+
     public TextView message_empty;    // This will display database empty message
     private Integer id = null;          // This will tell what day is selected
-
-    // Getter for the activity instance
-   // public static Activity getActivity() {
-      //  return activity;
-    //}
-
-    // constructor
-//    public CalendarActivity() {
-//        activity = this;
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,12 +96,13 @@ public class CalendarActivity extends AppCompatActivity {
         final RelativeLayout calendar_update = (RelativeLayout) findViewById(R.id.calendar_update);
 
         // Get the date position ranging from -1 to total amount of festival days TODO
-        int position = 1;
+        int position = 9;
 
         // Update the calendar in background
         if(Downloader.checkPermission(this)) {
             Log.i("tag", "ovde2");
             executeCalendarDownloaderTask(position);
+            position++;
             // loadMoreNoView();
 //        TODO Fina porukica ako nema konekcije. :/
         }
@@ -227,19 +227,27 @@ public class CalendarActivity extends AppCompatActivity {
             this.position = position;
         }
 
-        //private Context context;
-
-
         @Override
-        protected synchronized ArrayList<View> doInBackground(String... params) {
+        protected /*synchronized*/ ArrayList<View> doInBackground(String... params) {
 
+            MainActivity.calendarFlag = false;
+
+            // Escape early if cancel() is called
+            if(isCancelled()) {
+                return null;
+            }
+
+            for(int i = 9; i < 18; i++) {
+//                listOfCalendarIds.add(i);
+                loadCalendarDay(i);
+            }
             // call the API script that will return all calendar ids
             //String result = Downloader.getString("http://iswib.org/api/getCalendar.php", this);
-            loadCalendarDay(position);
+            //loadCalendarDay(position);
 
             //return result;
 
-            return null;
+            return pub_calendar_items;
         }
 
         @Override
@@ -249,12 +257,13 @@ public class CalendarActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<View> calendar_items) {
+            calendar_items = pub_calendar_items;
             super.onPostExecute(calendar_items);
-
+            MainActivity.calendarFlag = true;
             // Mark that the update is finished
             //MainActivity.calendarFlag = true;
             if (weakReference.get() != null) {
-                for(View calendar_item : calendar_items) {
+                for(View calendar_item : pub_calendar_items) {
                     // as the last view is a button to add more news, add the news item before the button
                     weakReference.get().addView(calendar_item);
                 }
@@ -276,8 +285,13 @@ public class CalendarActivity extends AppCompatActivity {
 
         private ArrayList<View> loadCalendarDay(int id) {
 
+            if(id < 9 || id > 17) {
+                Log.i("Calendar Activity", "Loading JSON ID is less than 9 or greater than 17");
+                return null;
+            }
+
             // Get all rows for calendar with this id
-            String result = Downloader.getString("http://iswib.org/api/getCalendar.php?id=" + id, this);
+            String result = Downloader.getString("http://iswib.org/api/getCalendar.php?id=" + id);
 
             // Parse the result and put every value into variable
             try {
@@ -311,18 +325,18 @@ public class CalendarActivity extends AppCompatActivity {
                 // Download "first" data
                 Bitmap img1 = null;
                 if (!first_image.equals("null")) {
-                     img1 = Downloader.getImage("http://iswib.org/" + first_image, this);
+                     img1 = Downloader.getImage("http://iswib.org/" + first_image);
                 }
                 // Download "second" data
                 Bitmap img2 = null;
                 if (!second_image.equals("null")) {
-                    img1 = Downloader.getImage("http://iswib.org/" + second_image, this);
+                    img2 = Downloader.getImage("http://iswib.org/" + second_image);
                 }
 
                 // Download "third" data
                 Bitmap img3 = null;
                 if (!third_image.equals("null")) {
-                    img3 = Downloader.getImage("http://iswib.org/" + third_image, this);
+                    img3 = Downloader.getImage("http://iswib.org/" + third_image);
                 }
 
                 // Set the day picker
@@ -414,8 +428,6 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                 }
 
-                ArrayList<View> calendar_items = new ArrayList<>();
-
                 // Add "first", "second" and "third" data
                 for(int i = 1; i <= 3; i++) {
                     String title;
@@ -486,11 +498,11 @@ public class CalendarActivity extends AppCompatActivity {
                         item_text.setText(Html.fromHtml(text));
 
                         // attach completed view to container
-                        calendar_items.add(calendar_item);
+                        pub_calendar_items.add(calendar_item);
                     }
                 }
 
-                return calendar_items;
+                return pub_calendar_items;
 
             } catch (JSONException e) {
                 e.printStackTrace();

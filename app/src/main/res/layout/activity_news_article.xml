@@ -21,7 +21,8 @@
                 android:layout_gravity="center_horizontal"
                 android:contentDescription="@string/article_image"
                 android:adjustViewBounds="false"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:layout_alignParentTop="true" />
 
             <TextView
                 android:layout_width="wrap_content"

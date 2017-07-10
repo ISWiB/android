@@ -30,7 +30,7 @@ import java.util.TimerTask;
  * The MainActivity will display the homepage to user with
  * some basic info from where he can navigate to other pages
  *
- * @author Jovan
+ * @author ISWiB IT&D
  * @version 1.1
  */
 public class MainActivity extends AppCompatActivity {
@@ -56,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Log.i("tag", "ASDFGH");
-        //Log.d("tag", "IIASDFGH");
-        //Log.v("tag", "VVASDFGH");
+        Log.i("tag", "ASDFKJHASDFKHJLSDFAHJLKSDFAHKJLSDJHKLSDAJHKLASDFJHKLASGH");
+        Log.d("tag", "IIASDFGHHJKSDAFJKLASDFHKJLASDFHJDFSAHJKLSDAHKJASD");
+        Log.v("tag", "VVASDFGHHJKASDFKLHSDFAHJKLSDFAHJLKSDFJHKLFSJKHLSDAHADFJK");
 
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         if(getSupportActionBar() != null)
@@ -86,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
         // Handle notifications
         final Intent intent = getIntent();
         String notification_type = intent.getStringExtra(NotificationValues.NOTIFICATION_TYPE);
+        Log.i("MainActivity", "NOTIFICATION_TYPE");
+        Log.v("MainActivity", "NOTIFICATION_TYPE");
+        Log.d("MainActivity", "NOTIFICATION_TYPE");
+
         if (notification_type != null) {
             // Determine which notification is received
             if (notification_type.equals(NotificationValues.GENERAL_NOTIFICATION)) {
@@ -103,6 +107,16 @@ public class MainActivity extends AppCompatActivity {
             } else if(notification_type.equals(NotificationValues.NEWS_NOTIFICATION)) {
                 // Handle news notification
                 Log.i("MainActivity", "Started from news notification");
+                Log.d("MainActivity", "Started from news notification");
+                Log.v("MainActivity", "Started from news notification");
+                Log.d("MainActivity", "Started from news notification");
+                Log.i("MainActivity", "Started from news notification");
+                Log.v("MainActivity", "Started from news notification");
+                Log.i("MainActivity", "Started from news notification");
+                Log.d("MainActivity", "Started from news notification");
+                Log.v("MainActivity", "Started from news notification");
+                Log.d("MainActivity", "Started from news notification");
+
                 if(!newsFlag) {
                     // Show progress modal dialog
                     final ProgressDialog progress;
@@ -115,19 +129,24 @@ public class MainActivity extends AppCompatActivity {
                             if (newsFlag) {
                                 timer.cancel();
                                 progress.dismiss();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // create a new intent
-                                        Intent new_intent = new Intent(activity, NewsArticle.class);
-                                        // Get id from intent
-                                        String news_id = intent.getStringExtra(NewsActivity.NEWS_ID);
-                                        // pass the id to the intent
-                                        new_intent.putExtra(NewsActivity.NEWS_ID, Integer.parseInt(news_id));
-                                        // open the article
-                                        startActivity(new_intent);
-                                    }
-                                });
+                                 try {
+                                     runOnUiThread(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             // create a new intent
+                                             Intent new_intent = new Intent(activity, NewsArticle.class);
+                                             // Get id from intent
+                                             String news_id = intent.getStringExtra(NewsActivity.NEWS_ID);
+                                             // pass the id to the intent
+                                             new_intent.putExtra(NewsActivity.NEWS_ID, Integer.parseInt(news_id));
+                                             // open the article
+                                             startActivity(new_intent);
+                                         }
+                                     });
+
+                                 } catch (Exception e) {
+                                     e.printStackTrace();
+                                 }
                             }
                         }
                     }, 0, Downloader.TIMEOUT);

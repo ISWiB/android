@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,14 +39,14 @@ import java.util.ArrayList;
 
 /**
  * The NewsActivity will display all the news from
- * the local android database. Each news article
- * can be accessed by tapping on it.
+ * the web database. Each news article can be accessed by tapping on it.
  *
  * @author ISWiB IT&D
  * @version 1.1
  */
 public class NewsActivity extends AppCompatActivity {
 
+    // Tag
     public static String NEWS_ID = "id";
 
     // Fields for managing news loading
@@ -124,7 +125,7 @@ public class NewsActivity extends AppCompatActivity {
     }
 
     // open touched article
-    public void openArticle(View view) {
+    public void openArticle(View view, String title, String text, String date, byte[] bytes) {
         // get the touched article id
         int id = view.getId();
 
@@ -133,6 +134,14 @@ public class NewsActivity extends AppCompatActivity {
 
         // pass the id to the intent
         intent.putExtra(NEWS_ID, id);
+        intent.putExtra(NewsClass.TITLE, title);
+        intent.putExtra(NewsClass.TEXT, text);
+        intent.putExtra(NewsClass.DATE, date);
+        intent.putExtra("Bytes", bytes);
+
+        Log.i("PutExtra", id + " " + title + " " + text + " " + date + " " + bytes);
+        Log.v("PutExtra", id + " " + title + " " + text + " " + date + " " + bytes);
+        Log.d("PutExtra", id + " " + title + " " + text + " " + date + " " + bytes);
 
         // open the article
         startActivity(intent);
@@ -187,8 +196,10 @@ public class NewsActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<View> doInBackground(String... urls) {
+
             ArrayList<View> news_items = new ArrayList<>();
             MainActivity.newsFlag = false;
+
             // Escape early if cancel() is called
             if (isCancelled()) {
                 return null;
@@ -201,7 +212,7 @@ public class NewsActivity extends AppCompatActivity {
 
         /**
          * Get all IDs of news from API.
-         * @return ArrayList<Integer></Integer>
+         * @return ArrayList of integers
          */
         protected ArrayList<Integer> getNewsIdsFromBase() {
             String result = Downloader.getString("http://iswib.org/api/getNews.php");
@@ -268,9 +279,11 @@ public class NewsActivity extends AppCompatActivity {
             String result = Downloader.getString("http://iswib.org/api/getNews.php?id=" + id);
 
             String title = "";
-            String image;
+            String image = "";
             String date = "";
+            String text = "";
             Bitmap bitmapImage = null;
+            byte[] bytes = null;
 
             // parse the result and put every value into variable
             try {
@@ -282,6 +295,8 @@ public class NewsActivity extends AppCompatActivity {
                 title = json.getString("title");
                 image = json.getString("news");
                 date = json.getString("date");
+                text = json.getString("text");
+
 
                 // this will download the image
                 bitmapImage = Downloader.getImage("http://iswib.org/images/news/" + image);
@@ -291,8 +306,13 @@ public class NewsActivity extends AppCompatActivity {
                 out = NewsActivity.this.openFileOutput(NewsClass.PREFIX + image, Context.MODE_PRIVATE);
                 if (bitmapImage != null) {
                     bitmapImage.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
                 }
                 out.close();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                bytes = stream.toByteArray();
+                stream.close();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -325,11 +345,6 @@ public class NewsActivity extends AppCompatActivity {
             // add news item
             final View news_item = getLayoutInflater().inflate(R.layout.news_item, weakReference.get(), false);
             news_item.setId(id);
-            news_item.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    openArticle(news_item);
-                }
-            });
 
             // load the image
             ImageView item_image = (ImageView) news_item.findViewById(R.id.news_item_image);
@@ -347,6 +362,23 @@ public class NewsActivity extends AppCompatActivity {
             Log.i("DATEDATE", date);
             TextView item_date = (TextView) news_item.findViewById(R.id.news_item_date);
             item_date.setText(date);
+
+            final String ftitle = title;
+            final String ftext = text;
+            final String fdate = date;
+            final Bitmap fimage = bitmapImage;
+            final byte[] fbytes = bytes;
+
+            news_item.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    openArticle(news_item, ftitle, ftext, fdate, fbytes);
+                    Log.i("onClick", ftitle + "  " + ftext + "  " + fdate + "  " + fbytes);
+                    Log.d("onClick", ftitle + "  " + ftext + "  " + fdate + "  " + fbytes);
+                    Log.v("onClick", ftitle + "  " + ftext + "  " + fdate + "  " + fbytes);
+                }
+            });
+
+
 
             return news_item;
 
