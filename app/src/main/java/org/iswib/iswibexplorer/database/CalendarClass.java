@@ -40,7 +40,7 @@ public abstract class CalendarClass implements BaseColumns {
 
     public static final String SEPARATOR = "&";
     public static final String PREFIX = "calendar";
-    public static final int DAYS = 8;
+    public static final int DAYS = 18;
 
     // To prevent someone from accidentally instantiating the article class,
     // give it an empty constructor.

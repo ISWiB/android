@@ -59,7 +59,7 @@ public class WorkshopsActivity extends AppCompatActivity {
     public static WorkshopsActivity activity;
 
     // constructor
-    private WorkshopsActivity() {
+    public WorkshopsActivity() {
     }
 
     // Getter for the activity instance
