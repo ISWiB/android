@@ -369,7 +369,6 @@ public class NewsActivity extends AppCompatActivity {
             final String ftitle = title;
             final String ftext = text;
             final String fdate = date;
-            final Bitmap fimage = bitmapImage;
             final byte[] fbytes = bytes;
 
             news_item.setOnClickListener(new View.OnClickListener() {

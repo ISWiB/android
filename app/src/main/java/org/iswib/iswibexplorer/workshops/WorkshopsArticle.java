@@ -23,7 +23,7 @@ import java.io.FileInputStream;
  * The WorkshopsArticle represents the single item of workshops which displays all
  * the relevant info for that workshop
  *
- * @author Jovan
+ * @author ISWiB IT&D
  * @version 1.1
  */
 public class WorkshopsArticle extends AppCompatActivity {
@@ -31,6 +31,7 @@ public class WorkshopsArticle extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_workshops_article);
 
 //        // get the database instance
@@ -79,7 +80,7 @@ public class WorkshopsArticle extends AppCompatActivity {
         // pass values to views
         // load the image
         ImageView article_image = (ImageView)findViewById(R.id.workshops_article_image);
-        Bitmap bitmap = null;
+        Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 //        try{
 //            // Load the file
 //            FileInputStream stream = this.openFileInput(image);
@@ -97,7 +98,7 @@ public class WorkshopsArticle extends AppCompatActivity {
 //            e.printStackTrace();
 //        }
         if (article_image != null) {
-            article_image.setImageBitmap(bitmap);
+            article_image.setImageBitmap(bitmapImage);
         }
 
         // load the title
@@ -115,7 +116,6 @@ public class WorkshopsArticle extends AppCompatActivity {
             article_text.setText(Html.fromHtml(text));
         }
 
-//        cursor.close();
     }
 
     @Override

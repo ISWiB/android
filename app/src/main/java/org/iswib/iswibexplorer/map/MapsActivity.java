@@ -130,13 +130,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 position = new LatLng(44.786549, 20.395199);
                 title = getString(R.string.maps_location_ada);
                 break;
-            case "metropolitan":
-                position = new LatLng(44.830523, 20.455012);
-                title = getString(R.string.maps_location_metropolitan);
-                break;
-            case "parobrod":
-                position = new LatLng(44.820348, 20.460212);
-                title = getString(R.string.maps_location_parobrod);
+            case "workshops":
+                position = new LatLng(44.8042004, 20.4810465);
+                title = getString(R.string.maps_location_workshops);
                 break;
             case "openingceremony":
                 position = new LatLng(44.810799, 20.462531);
@@ -147,7 +143,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 title = getString(R.string.maps_location_closingceremony);
                 break;
             case "welcome":
-                position = new LatLng(44.818538, 20.454908);
+                position = new LatLng(44.817796, 20.4657486);
                 title = getString(R.string.maps_location_welcome);
                 break;
             case "monparty":
@@ -159,27 +155,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 title = getString(R.string.maps_location_countryfair);
                 break;
             case "artnight":
-                position = new LatLng(44.817483, 20.464915);
+                position = new LatLng(44.8178802, 20.4652923);
                 title = getString(R.string.maps_location_artnight);
                 break;
-            case "cetinjska":
-                position = new LatLng(44.817548, 20.465481);
-                title = getString(R.string.maps_location_cetinjska);
-                break;
-            case "odg":
-                position = new LatLng(44.815303, 20.464832);
-                title = getString(R.string.maps_location_odg);
-                break;
             case "flagparade":
-                position = new LatLng(44.815982, 20.460162);
+                position = new LatLng(44.8119096, 20.4627541);
                 title = getString(R.string.maps_location_flagparade);
                 break;
-            case "sightseeing":
-                position = new LatLng(44.835210, 20.418305);
-                title = getString(R.string.maps_location_sightseeing);
-                break;
             case "farewell":
-                position = new LatLng(44.818990, 20.455914);
+                position = new LatLng(44.8057579, 20.475727);
                 title = getString(R.string.maps_location_farewell);
                 break;
             default:
