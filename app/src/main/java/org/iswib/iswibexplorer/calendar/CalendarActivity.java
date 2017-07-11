@@ -267,8 +267,6 @@ public class CalendarActivity extends AppCompatActivity {
                     // as the last view is a button to add more news, add the news item before the button
                     weakReference.get().addView(calendar_item);
                 }
-//            TODO Proveriti da li nam je ovo potrebno, ako ne skloniti
-//            loaded++;
             }
 
             // Get and show the schedule

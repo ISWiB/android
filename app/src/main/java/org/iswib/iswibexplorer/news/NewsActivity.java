@@ -309,6 +309,9 @@ public class NewsActivity extends AppCompatActivity {
 
                 }
                 out.close();
+
+                //Ovo sam ja ubacivao dodatno zbog WorkshopsArticle i NewsArticle, radi prebacivanja slike
+                //U drugu klasu... Mada nije urodilo plodom
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 bytes = stream.toByteArray();

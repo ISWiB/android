@@ -33,60 +33,69 @@ public class WorkshopsArticle extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workshops_article);
 
-        // get the database instance
-        DatabaseHelper daHelper = DatabaseHelper.getInstance(this);
-        SQLiteDatabase db = daHelper.getReadableDatabase();
+//        // get the database instance
+//        DatabaseHelper daHelper = DatabaseHelper.getInstance(this);
+//        SQLiteDatabase db = daHelper.getReadableDatabase();
+//
+//        // get the passed id from intent
+//        Intent intent = getIntent(); // gets the previously created intent
+//        int id = intent.getIntExtra(WorkshopsActivity.WORKSHOPS_ID, 1);
+//
+//        // Select what columns to return
+//        String[] tableColumns = {
+//                WorkshopsClass.ID,
+//                WorkshopsClass.TITLE,
+//                WorkshopsClass.TEXT,
+//                WorkshopsClass.IMAGE
+//        };
+//
+//        Cursor cursor = db.query(
+//                WorkshopsClass.TABLE_NAME,     // table
+//                tableColumns,             // columns
+//                WorkshopsClass.ID + "=" + id,  // selection
+//                null,                     // selection arguments
+//                null,                     // group by
+//                null,                     // having
+//                null                      // order by
+//        );
+//
+//        // move to first and only row
+//        cursor.moveToFirst();
+//
+//        // get values
+//        String title = cursor.getString(cursor.getColumnIndex(WorkshopsClass.TITLE));
+//        String text = cursor.getString(cursor.getColumnIndex(WorkshopsClass.TEXT));
+//        String image = cursor.getString(cursor.getColumnIndex(WorkshopsClass.IMAGE));
 
-        // get the passed id from intent
-        Intent intent = getIntent(); // gets the previously created intent
-        int id = intent.getIntExtra(WorkshopsActivity.WORKSHOPS_ID, 1);
+        Intent intent = getIntent();
+        int id = intent.getIntExtra(WorkshopsClass.ID, 1);
 
-        // Select what columns to return
-        String[] tableColumns = {
-                WorkshopsClass.ID,
-                WorkshopsClass.TITLE,
-                WorkshopsClass.TEXT,
-                WorkshopsClass.IMAGE
-        };
+        String title = intent.getStringExtra(WorkshopsClass.TITLE);
+        String text = intent.getStringExtra(WorkshopsClass.TEXT);
+        byte[] bytes = intent.getByteArrayExtra("Bytes");
 
-        Cursor cursor = db.query(
-                WorkshopsClass.TABLE_NAME,     // table
-                tableColumns,             // columns
-                WorkshopsClass.ID + "=" + id,  // selection
-                null,                     // selection arguments
-                null,                     // group by
-                null,                     // having
-                null                      // order by
-        );
 
-        // move to first and only row
-        cursor.moveToFirst();
-
-        // get values
-        String title = cursor.getString(cursor.getColumnIndex(WorkshopsClass.TITLE));
-        String text = cursor.getString(cursor.getColumnIndex(WorkshopsClass.TEXT));
-        String image = cursor.getString(cursor.getColumnIndex(WorkshopsClass.IMAGE));
 
         // pass values to views
         // load the image
         ImageView article_image = (ImageView)findViewById(R.id.workshops_article_image);
         Bitmap bitmap = null;
-        try{
-            // Load the file
-            FileInputStream stream = this.openFileInput(image);
-
-            // Set the lower quality of images for better performance
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-
-            // Load the image with options for lower quality
-            bitmap = BitmapFactory.decodeStream(stream, null, options);
-
-            // Close the stream
-            stream.close();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            // Load the file
+//            FileInputStream stream = this.openFileInput(image);
+//
+//            // Set the lower quality of images for better performance
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inPreferredConfig = Bitmap.Config.RGB_565;
+//
+//            // Load the image with options for lower quality
+//            bitmap = BitmapFactory.decodeStream(stream, null, options);
+//
+//            // Close the stream
+//            stream.close();
+//        } catch(Exception e){
+//            e.printStackTrace();
+//        }
         if (article_image != null) {
             article_image.setImageBitmap(bitmap);
         }
@@ -106,7 +115,7 @@ public class WorkshopsArticle extends AppCompatActivity {
             article_text.setText(Html.fromHtml(text));
         }
 
-        cursor.close();
+//        cursor.close();
     }
 
     @Override
