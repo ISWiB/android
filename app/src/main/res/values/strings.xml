@@ -52,19 +52,15 @@
     <string name="maps_location_dom">Dorm Petar Drapšin</string>
     <string name="maps_location_kafana">Kafana party - Konoba Akustik</string>
     <string name="maps_location_ada">Free day at Ada lake</string>
-    <string name="maps_location_metropolitan">Workshops - Metropolitan</string>
-    <string name="maps_location_parobrod">Workshops - Parobrod</string>
+    <string name="maps_location_workshops">Workshops - Belgrade Business School</string>
     <string name="maps_location_openingceremony">Opening Ceremony - Assembly</string>
     <string name="maps_location_closingceremony">Closing Ceremony - Dečiji kulturni centar</string>
-    <string name="maps_location_welcome">Welcome party - Sport pub</string>
-    <string name="maps_location_farewell">Closing party - InformBiro</string>
-    <string name="maps_location_monparty">Party on Povetarac</string>
+    <string name="maps_location_welcome">Welcome party - Bluz i pivo</string>
+    <string name="maps_location_farewell">Closing party - KST</string>
+    <string name="maps_location_monparty">Povetarac party</string>
     <string name="maps_location_countryfair">Country Fair - Dorćol Platz</string>
-    <string name="maps_location_artnight">Art night - Show Room</string>
-    <string name="maps_location_cetinjska">Party in Cetinjska</string>
-    <string name="maps_location_odg">Innovation Conversation - Opština Stari Grad</string>
-    <string name="maps_location_flagparade">Flag Parade - Republic Square</string>
-    <string name="maps_location_sightseeing">Sightseeing - John Kennedy bus stop</string>
+    <string name="maps_location_artnight">Art night - Elektropionir</string>
+    <string name="maps_location_flagparade">Flag Parade - Nikola Pašić Square</string>
 
     <!-- Strings defined far various uses -->
     <string name="no_permission">Connect to the internet or check you sync settings…</string>

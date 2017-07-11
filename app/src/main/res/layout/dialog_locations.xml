@@ -19,20 +19,8 @@
             android:textSize="@dimen/dialog_location_textsize"
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
-            android:text="@string/maps_location_metropolitan"
-            android:tag="metropolitan"
-            android:onClick="focusTo"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dialog_location_height"
-            android:background="@drawable/header"
-            android:gravity="center"
-            android:textSize="@dimen/dialog_location_textsize"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/white"
-            android:text="@string/maps_location_parobrod"
-            android:tag="parobrod"
+            android:text="@string/maps_location_workshops"
+            android:tag="workshops"
             android:onClick="focusTo"/>
 
         <TextView
@@ -57,18 +45,6 @@
             android:textColor="@color/white"
             android:text="@string/maps_location_closingceremony"
             android:tag="closingceremony"
-            android:onClick="focusTo"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dialog_location_height"
-            android:background="@drawable/header"
-            android:gravity="center"
-            android:textSize="@dimen/dialog_location_textsize"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/white"
-            android:text="@string/maps_location_odg"
-            android:tag="odg"
             android:onClick="focusTo"/>
 
         <TextView
@@ -105,18 +81,6 @@
             android:textColor="@color/white"
             android:text="@string/maps_location_flagparade"
             android:tag="flagparade"
-            android:onClick="focusTo"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dialog_location_height"
-            android:background="@drawable/header"
-            android:gravity="center"
-            android:textSize="@dimen/dialog_location_textsize"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/white"
-            android:text="@string/maps_location_sightseeing"
-            android:tag="sightseeing"
             android:onClick="focusTo"/>
 
         <TextView
@@ -165,18 +129,6 @@
             android:textColor="@color/white"
             android:text="@string/maps_location_kafana"
             android:tag="kafana"
-            android:onClick="focusTo"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dialog_location_height"
-            android:background="@drawable/header"
-            android:gravity="center"
-            android:textSize="@dimen/dialog_location_textsize"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/white"
-            android:text="@string/maps_location_cetinjska"
-            android:tag="cetinjska"
             android:onClick="focusTo"/>
 
         <TextView

@@ -59,7 +59,7 @@ public class WorkshopsActivity extends AppCompatActivity {
     public static WorkshopsActivity activity;
 
     // constructor
-    private WorkshopsActivity() {
+    public WorkshopsActivity() {
     }
 
     // Getter for the activity instance
@@ -348,7 +348,7 @@ public class WorkshopsActivity extends AppCompatActivity {
                 //Ovo sam ja ubacivao dodatno zbog WorkshopsArticle i NewsArticle, radi prebacivanja slike
                 //U drugu klasu... Mada nije urodilo plodom
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                bitmapImage.compress(Bitmap.CompressFormat.JPEG, 90, stream);
 
                 bytes = stream.toByteArray();
                 stream.close();
@@ -379,7 +379,6 @@ public class WorkshopsActivity extends AppCompatActivity {
 
             final String ftitle = title;
             final String ftext = text;
-            final Bitmap fimage = bitmapImage;
             final byte[] fbytes = bytes;
 
             workshops_item.setOnClickListener(new View.OnClickListener() {
@@ -390,9 +389,6 @@ public class WorkshopsActivity extends AppCompatActivity {
                     Log.v("onClick", ftitle + "  " + ftext + "  " + fbytes);
                 }
             });
-
-
-
 
             return workshops_item;
         }
@@ -412,7 +408,6 @@ public class WorkshopsActivity extends AppCompatActivity {
         intent.putExtra(WORKSHOPS_ID, id);
         intent.putExtra(WorkshopsClass.TITLE, title);
         intent.putExtra(WorkshopsClass.TEXT, text);
-//        intent.putExtra(WorkshopsClass.IMAGE, image);
         intent.putExtra("Bytes", bytes);
 
         // open the article
