@@ -159,8 +159,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 title = getString(R.string.maps_location_artnight);
                 break;
             case "flagparade":
-                position = new LatLng(44.8119096, 20.4627541);
+                position = new LatLng(44.8119976, 20.4630151);
                 title = getString(R.string.maps_location_flagparade);
+                break;
+            case "speakup":
+                position = new LatLng(44.8121435, 20.4625028);
+                title = getString(R.string.maps_location_speakup);
                 break;
             case "farewell":
                 position = new LatLng(44.8057579, 20.475727);

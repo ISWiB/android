@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.iswib.iswibexplorer.MainActivity;
@@ -97,7 +98,7 @@ public class NewsActivity extends AppCompatActivity {
 
         // Button will be shown after the update is complete
         //final Button news_button = (Button) findViewById(R.id.news_button);
-        //final RelativeLayout news_update = (RelativeLayout) findViewById(R.id.news_update);
+        final RelativeLayout news_update = (RelativeLayout) findViewById(R.id.news_update);
 
         // get the initial view with button
 
@@ -105,7 +106,11 @@ public class NewsActivity extends AppCompatActivity {
         if(Downloader.checkPermission(this)) {
             executeNewsDownloaderTask(null);
            // loadMoreNoView();
-//        TODO Fina porukica ako nema konekcije. :/
+        }
+        else {
+            // no connection
+            ((TextView)news_update.getChildAt(0)).setText(R.string.no_permission);
+            news_update.getChildAt(1).setVisibility(View.GONE);
         }
     }
 

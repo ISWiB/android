@@ -60,7 +60,8 @@
     <string name="maps_location_monparty">Povetarac party</string>
     <string name="maps_location_countryfair">Country Fair - Dorćol Platz</string>
     <string name="maps_location_artnight">Art night - Elektropionir</string>
-    <string name="maps_location_flagparade">Flag Parade - Nikola Pašić Square</string>
+    <string name="maps_location_flagparade">Flag Parade - Nikola Pašić square</string>
+    <string name="maps_location_speakup">Speak Up! - Gradska uprava Beograda</string>
 
     <!-- Strings defined far various uses -->
     <string name="no_permission">Connect to the internet or check you sync settings…</string>

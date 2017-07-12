@@ -103,6 +103,18 @@
             android:textSize="@dimen/dialog_location_textsize"
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
+            android:text="@string/maps_location_speakup"
+            android:tag="speakup"
+            android:onClick="focusTo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_location_height"
+            android:background="@drawable/header"
+            android:gravity="center"
+            android:textSize="@dimen/dialog_location_textsize"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/white"
             android:text="@string/maps_location_farewell"
             android:tag="farewell"
             android:onClick="focusTo"/>

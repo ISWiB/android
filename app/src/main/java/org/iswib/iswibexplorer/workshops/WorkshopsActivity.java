@@ -145,6 +145,11 @@ public class WorkshopsActivity extends AppCompatActivity {
         if(Downloader.checkPermission(this)) {
             executeWorkshopsDownloaderTask(null);
         }
+        else {
+            // no connection
+            ((TextView)workshops_update.getChildAt(0)).setText(R.string.no_permission);
+            workshops_update.getChildAt(1).setVisibility(View.GONE);
+        }
 
     }
 
