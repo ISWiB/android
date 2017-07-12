@@ -63,17 +63,12 @@ public class CalendarActivity extends AppCompatActivity {
     private String lunch;
     private String workshops;
 
-    public TextView message_empty;    // This will display database empty message
     private Integer global_id = null;          // This will tell what day is selected
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-        Log.i("tag", "ovde1");
-
-        // This will display message if database is empty
-        message_empty = new TextView(this);
 
         // If started from notification get day id and load it
         Intent intent = getIntent();
@@ -99,10 +94,11 @@ public class CalendarActivity extends AppCompatActivity {
 
         // Update the calendar in background
         if(Downloader.checkPermission(this)) {
-            Log.i("tag", "ovde2");
             executeCalendarDownloaderTask(position);
-            // loadMoreNoView();
-//        TODO Fina porukica ako nema konekcije. :/
+        } else {
+            // no connection
+            ((TextView)calendar_update.getChildAt(0)).setText(R.string.no_permission);
+            calendar_update.getChildAt(1).setVisibility(View.GONE);
         }
 
 
@@ -110,15 +106,15 @@ public class CalendarActivity extends AppCompatActivity {
         // If finished
         if (calendar_update != null) {
             // Hide the calendar update info
-            calendar_update.setVisibility(View.GONE);
+            //calendar_update.setVisibility(View.GONE);
         }
 
 
     }
 
     public void executeCalendarDownloaderTask(int position) {
-        LinearLayout calendar_container = (LinearLayout) findViewById(R.id.calendar_container);
-        WeakReference<LinearLayout> weakReference = new WeakReference<>(calendar_container);
+        RelativeLayout calendar_root = (RelativeLayout) findViewById(R.id.calendar_root);
+        WeakReference<RelativeLayout> weakReference = new WeakReference<>(calendar_root);
         CalendarDownloaderTask task = new CalendarDownloaderTask(weakReference, position);
         task.execute();
     }
@@ -212,28 +208,28 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
 
-    private class CalendarDownloaderTask extends AsyncTask<String, Void, View> {
+    private class CalendarDownloaderTask extends AsyncTask<String, Void, Boolean> {
 
-        private WeakReference<LinearLayout> weakReference;
+        private WeakReference<RelativeLayout> weakReference;
         private int position;
 
-        private CalendarDownloaderTask(WeakReference<LinearLayout> weakReference, int position) {
+        private CalendarDownloaderTask(WeakReference<RelativeLayout> weakReference, int position) {
             this.weakReference = weakReference;
             this.position = position;
         }
 
         @Override
-        protected /*synchronized*/ View doInBackground(String... params) {
+        protected /*synchronized*/ Boolean doInBackground(String... params) {
 
             MainActivity.calendarFlag = false;
 
             // Escape early if cancel() is called
             if(isCancelled()) {
-                return null;
+                return false;
             }
 
-            View root = loadCalendarDay(position);
-            return root;
+            loadCalendarDay(position);
+            return true;
         }
 
         @Override
@@ -242,32 +238,37 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(View root) {
-            super.onPostExecute(root);
+        protected void onPostExecute(Boolean bool) {
+            super.onPostExecute(bool);
+
+            // hide calendar updater
+            weakReference.get().findViewById(R.id.calendar_update).setVisibility(View.GONE);
+
+            // get calendar container
+            LinearLayout calendar_container = (LinearLayout)weakReference.get().findViewById(R.id.calendar_container);
 
             if (weakReference.get() != null) {
 
                 // remove previous items
                 while (items_to_remove > 0) {
-                    weakReference.get().removeViewAt(items_to_remove);
+                    calendar_container.removeViewAt(items_to_remove);
                     items_to_remove--;
                 }
-                //for (int i = 1; i < items_to_remove; i++)
 
                 // add date
-                TextView text_view = (TextView) weakReference.get().findViewById(R.id.calendar_date);
+                TextView text_view = (TextView) calendar_container.findViewById(R.id.calendar_date);
                 text_view.setText(date_text);
 
                 // add calendar items
                 for(View calendar_item : pub_calendar_items) {
                     // as the last view is a button to add more news, add the news item before the button
-                    weakReference.get().addView(calendar_item, 1);
+                    calendar_container.addView(calendar_item, 1);
                 }
 
                 // add schedule and workshop
                 // Find the views to populate data with
-                TextView calendar_schedule_left = (TextView) weakReference.get().findViewById(R.id.calendar_schedule_left);
-                TextView calendar_schedule_right =  (TextView) weakReference.get().findViewById(R.id.calendar_schedule_right);
+                TextView calendar_schedule_left = (TextView) calendar_container.findViewById(R.id.calendar_schedule_left);
+                TextView calendar_schedule_right =  (TextView) calendar_container.findViewById(R.id.calendar_schedule_right);
 
                 // Add data to views
                 if(calendar_schedule_left != null) {
@@ -297,7 +298,7 @@ public class CalendarActivity extends AppCompatActivity {
                     // Remove any previous text
                     calendar_schedule_right.setText("");
                     // Hide work icon
-                    ImageView calendar_schedule_work = (ImageView) root.findViewById(R.id.calendar_schedule_work);
+                    ImageView calendar_schedule_work = (ImageView) findViewById(R.id.calendar_schedule_work);
                     if (calendar_schedule_work != null) {
                         calendar_schedule_work.setVisibility(View.INVISIBLE);
                     }
@@ -325,7 +326,7 @@ public class CalendarActivity extends AppCompatActivity {
             calendar_header.setVisibility(View.VISIBLE);
         }
 
-        private View loadCalendarDay(int id) {
+        private void loadCalendarDay(int id) {
 
             global_id = id;
             items_to_remove = pub_calendar_items.size();
@@ -333,7 +334,7 @@ public class CalendarActivity extends AppCompatActivity {
 
             if(id < 9 || id > 18) {
                 Log.i("Calendar Activity", "Loading JSON ID is less than 9 or greater than 18");
-                return null;
+                return;
             }
 
             // Get all rows for calendar with this id
@@ -414,8 +415,8 @@ public class CalendarActivity extends AppCompatActivity {
                             break;
                     }
                 }
-                final View root = getLayoutInflater().inflate(R.layout.activity_calendar, weakReference.get(), false);
-               // final LinearLayout calendar_item_container = (LinearLayout) findViewById(R.id.calendar_item_container);
+                //final View root = getLayoutInflater().inflate(R.layout.activity_calendar, weakReference.get(), false);
+                View root = new View(CalendarActivity.this);
 
                 // Append a date and arrow down sign that users know it can be clicked
                 date_text = "\u25be " + date.substring(0, 6);
@@ -494,14 +495,9 @@ public class CalendarActivity extends AppCompatActivity {
                     }
                 }
 
-                //return pub_calendar_items;
-                return root;
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            return null;
         }
     }
 

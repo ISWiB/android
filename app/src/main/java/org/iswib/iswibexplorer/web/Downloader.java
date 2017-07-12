@@ -41,6 +41,7 @@ public class Downloader {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
         // If connected to the internet
         if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
 
@@ -53,6 +54,8 @@ public class Downloader {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
             int sync_type = Integer.parseInt(sharedPref.getString(SettingsActivity.SYNC_TYPE, "0"));
 
+            Log.i("mobilni", "r: " + roaming + "; s: " + sync_type);
+
             if (roaming && sync_type != 2) {
                 return false;
             }
@@ -60,8 +63,11 @@ public class Downloader {
             if (connection_type.equals("MOBILE") && sync_type != 1) {
                 return false;
             }
+
+            // alles gute
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**

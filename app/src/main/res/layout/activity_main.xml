@@ -42,7 +42,7 @@
                     android:orientation="vertical"
                     android:layout_toLeftOf="@+id/main_strut_top"
                     android:layout_toStartOf="@+id/main_strut_top"
-                    android:background="@drawable/ripple_main_news"
+                    android:background="@color/iswib_color_1"
                     android:onClick="goTo">
 
                     <ImageView
@@ -78,7 +78,7 @@
                     android:orientation="vertical"
                     android:layout_toRightOf="@+id/main_strut_top"
                     android:layout_toEndOf="@+id/main_strut_top"
-                    android:background="@drawable/ripple_main_calendar"
+                    android:background="@color/iswib_color_4"
                     android:onClick="goTo">
 
                     <ImageView
@@ -115,7 +115,7 @@
                     android:orientation="vertical"
                     android:layout_toLeftOf="@+id/main_strut_bottom"
                     android:layout_toStartOf="@+id/main_strut_bottom"
-                    android:background="@drawable/ripple_main_workshops"
+                    android:background="@color/iswib_color_3"
                     android:onClick="goTo">
 
                     <ImageView
@@ -151,7 +151,7 @@
                     android:orientation="vertical"
                     android:layout_toRightOf="@+id/main_strut_bottom"
                     android:layout_toEndOf="@+id/main_strut_bottom"
-                    android:background="@drawable/ripple_main_map"
+                    android:background="@color/iswib_color_2"
                     android:onClick="goTo">
 
                     <ImageView
