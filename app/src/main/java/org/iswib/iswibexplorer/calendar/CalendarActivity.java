@@ -38,7 +38,6 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * The CalendarActivity displays days of the festival and corresponding schedule
@@ -90,7 +89,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         final RelativeLayout calendar_update = (RelativeLayout) findViewById(R.id.calendar_update);
 
-        // Get the date position ranging from -1 to total amount of festival days TODO
+        // Get the date position ranging from -1 to total amount of festival days
         Calendar date_now = Calendar.getInstance();
         Calendar date_start = Calendar.getInstance();
         date_start.set(2017, 7, 16);
@@ -198,8 +197,6 @@ public class CalendarActivity extends AppCompatActivity {
 
         @Override
         protected /*synchronized*/ Boolean doInBackground(String... params) {
-
-            MainActivity.calendarFlag = false;
 
             // Escape early if cancel() is called
             if(isCancelled()) {

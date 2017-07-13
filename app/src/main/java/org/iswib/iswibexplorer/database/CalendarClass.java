@@ -13,9 +13,6 @@ import android.provider.BaseColumns;
 public abstract class CalendarClass implements BaseColumns {
 
     // define table properties
-    public static final String TABLE_NAME = "iswib_calendar";
-    public static final String ID = "id";
-    public static final String VERSION = "version";
     public static final String DATE = "date";
 
     public static final String FIRST_IMAGE = "first_image";
@@ -38,8 +35,6 @@ public abstract class CalendarClass implements BaseColumns {
     public static final String DINNER = "dinner";
     public static final String WORKSHOPS = "workshops";
 
-    public static final String SEPARATOR = "&";
-    public static final String PREFIX = "calendar";
     public static final int DAYS = 18;
 
     // To prevent someone from accidentally instantiating the article class,

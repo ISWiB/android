@@ -13,10 +13,7 @@ import android.provider.BaseColumns;
 public abstract class WorkshopsClass implements BaseColumns {
 
     // define table properties
-    public static final String TABLE_NAME = "iswib_workshops";
     public static final String ID = "id";
-    public static final String VERSION = "version";
-    public static final String IMAGE = "image";
     public static final String TITLE = "title";
     public static final String TEXT = "text";
     public static final String PREFIX = "workshops";

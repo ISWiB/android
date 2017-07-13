@@ -13,9 +13,7 @@ import android.provider.BaseColumns;
 public abstract class NewsClass implements BaseColumns {
 
     // define table properties
-    public static final String TABLE_NAME = "iswib_news";
     public static final String ID = "id";
-    public static final String IMAGE = "image";
     public static final String TITLE = "title";
     public static final String TEXT = "text";
     public static final String DATE = "date";

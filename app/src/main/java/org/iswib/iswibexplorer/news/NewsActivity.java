@@ -1,6 +1,5 @@
 package org.iswib.iswibexplorer.news;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.iswib.iswibexplorer.MainActivity;
 import org.iswib.iswibexplorer.R;
 import org.iswib.iswibexplorer.calendar.CalendarActivity;
 import org.iswib.iswibexplorer.database.NewsClass;
@@ -32,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -50,6 +46,9 @@ public class NewsActivity extends AppCompatActivity {
     // Tag
     public static String NEWS_ID = "id";
 
+    // TODO proveriti da li je ovo potrebno
+    // TODO vecino stvari koje smo obelezili sa TODO i pitanjem da li je potrebno sluzi za pracenje koliko je newsa ucitano da bi se izbegao onaj
+    // TODO null pointer excetpion kada loaduje poslednje vesti iz baze, ovo kontam ostaviti za sledecu godinu samo malo srediti ove TODO notifikacije :)
     // Fields for managing news loading
     public static int load_total = 5;   // How many news articles to display
     private int loaded = 0;
@@ -57,17 +56,10 @@ public class NewsActivity extends AppCompatActivity {
     // make a static instance of activity that can be passed to async tasks
     public static NewsActivity activity;
 
-    // getter for the activity instance
-    public static Activity getActivity() {
-        return activity;
-    }
-
     /**
      * Amount of news that will be loaded in news activity when refresh is clicked.
      */
     private static final int loadNewsAmount = 5;
-
-    private NewsDownloaderTask task;
 
     private int lastIndexOfLoadedNews = 0;
 
@@ -117,16 +109,9 @@ public class NewsActivity extends AppCompatActivity {
     public void executeNewsDownloaderTask(View view) {
         LinearLayout container = (LinearLayout) findViewById(R.id.news_container);
         WeakReference<LinearLayout> weakReference = new WeakReference<>(container);
-        task = new NewsDownloaderTask(weakReference);
+        NewsDownloaderTask task = new NewsDownloaderTask(weakReference);
         task.execute();
 
-    }
-
-//      Uzima index od poslednje vesti koja je ucitana
-//      Ucitava sledecih x vesti, na primer 5.
-    public void loadMore(View view) {
-        // TODO another asyncTask
-//        loadMoreNoView();
     }
 
     // open touched article
@@ -143,10 +128,6 @@ public class NewsActivity extends AppCompatActivity {
         intent.putExtra(NewsClass.TEXT, text);
         intent.putExtra(NewsClass.DATE, date);
         intent.putExtra("Bytes", bytes);
-
-        Log.i("PutExtra", id + " " + title + " " + text + " " + date + " " + bytes);
-        Log.v("PutExtra", id + " " + title + " " + text + " " + date + " " + bytes);
-        Log.d("PutExtra", id + " " + title + " " + text + " " + date + " " + bytes);
 
         // open the article
         startActivity(intent);
@@ -195,15 +176,14 @@ public class NewsActivity extends AppCompatActivity {
 
         private WeakReference<LinearLayout> weakReference;
 
-        public NewsDownloaderTask(WeakReference<LinearLayout> weakReference) {
+        private NewsDownloaderTask(WeakReference<LinearLayout> weakReference) {
             this.weakReference = weakReference;
         }
 
         @Override
         protected ArrayList<View> doInBackground(String... urls) {
 
-            ArrayList<View> news_items = new ArrayList<>();
-            MainActivity.newsFlag = false;
+            ArrayList<View> news_items;
 
             // Escape early if cancel() is called
             if (isCancelled()) {
@@ -219,7 +199,7 @@ public class NewsActivity extends AppCompatActivity {
          * Get all IDs of news from API.
          * @return ArrayList of integers
          */
-        protected ArrayList<Integer> getNewsIdsFromBase() {
+        private ArrayList<Integer> getNewsIdsFromBase() {
             String result = Downloader.getString("http://iswib.org/api/getNews.php");
             ArrayList<Integer> listOfIds = new ArrayList<>();
             try {
@@ -246,7 +226,6 @@ public class NewsActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<View> news_items) {
 //            TODO spreman view i onda cemo ovde samo da ga ispisemo na nasoj aktivnosti
             //View news_item = null;
-            MainActivity.newsFlag = true;
             findViewById(R.id.news_update).setVisibility(View.INVISIBLE);
             findViewById(R.id.news_button).setVisibility(View.VISIBLE);
 
@@ -284,7 +263,7 @@ public class NewsActivity extends AppCompatActivity {
             String result = Downloader.getString("http://iswib.org/api/getNews.php?id=" + id);
 
             String title = "";
-            String image = "";
+            String image;
             String date = "";
             String text = "";
             Bitmap bitmapImage = null;
@@ -322,11 +301,7 @@ public class NewsActivity extends AppCompatActivity {
                 bytes = stream.toByteArray();
                 stream.close();
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (JSONException | IOException e) {
                 e.printStackTrace();
             }
 
@@ -367,7 +342,6 @@ public class NewsActivity extends AppCompatActivity {
             item_title.setTypeface(Typeface.createFromAsset(getAssets(), "roboto.ttf"));
 
             // load the date
-            Log.i("DATEDATE", date);
             TextView item_date = (TextView) news_item.findViewById(R.id.news_item_date);
             item_date.setText(date);
 
@@ -379,9 +353,6 @@ public class NewsActivity extends AppCompatActivity {
             news_item.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     openArticle(news_item, ftitle, ftext, fdate, fbytes);
-                    Log.i("onClick", ftitle + "  " + ftext + "  " + fdate + "  " + fbytes);
-                    Log.d("onClick", ftitle + "  " + ftext + "  " + fdate + "  " + fbytes);
-                    Log.v("onClick", ftitle + "  " + ftext + "  " + fdate + "  " + fbytes);
                 }
             });
 
@@ -401,13 +372,13 @@ public class NewsActivity extends AppCompatActivity {
         }
 
     }
-
-    public ArrayList<Integer> getListOfNewsIds() {
+// TODO proveriti da li nam ovo treba?
+ /*   public ArrayList<Integer> getListOfNewsIds() {
         return listOfNewsIds;
     }
 
     public void setListOfNewsIds(ArrayList<Integer> listOfNewsIds) {
         this.listOfNewsIds = listOfNewsIds;
-    }
+    } */
 
 }
