@@ -91,8 +91,10 @@ public class CalendarActivity extends AppCompatActivity {
         final RelativeLayout calendar_update = (RelativeLayout) findViewById(R.id.calendar_update);
 
         // Get the date position ranging from -1 to total amount of festival days TODO
-        int position = 9;
-        global_id = 9; // TODO make use of functions to determine this date automatically
+        Calendar date_now = Calendar.getInstance();
+        Calendar date_start = Calendar.getInstance();
+        date_start.set(2017, 7, 16);
+        int position = getDayPosition(date_now, date_start);
 
         // Update the calendar in background
         if(Downloader.checkPermission(this)) {
@@ -136,12 +138,10 @@ public class CalendarActivity extends AppCompatActivity {
     /**
      * This method returns the difference in days between to dates
      */
-    public static int getDayPosition(Date now_date, Date start_date) {
-        Calendar now = getDatePart(now_date);
-        Calendar start = getDatePart(start_date);
+    public static int getDayPosition(Calendar now, Calendar start) {
 
         // Keep count, as there is no need to count more than festival days
-        int counter = 0;
+        int counter = 9;
 
         int days_between = 0;
         if(now.before(start)) {
@@ -162,21 +162,7 @@ public class CalendarActivity extends AppCompatActivity {
 
 
         // Return negative
-        return days_between;
-    }
-
-    /**
-     * This method clears all the info of the date, except the days
-     */
-    public static Calendar getDatePart(Date date){
-        Calendar cal = Calendar.getInstance();       // get calendar instance
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);            // set hour to midnight
-        cal.set(Calendar.MINUTE, 0);                 // set minute in hour
-        cal.set(Calendar.SECOND, 0);                 // set second in minute
-        cal.set(Calendar.MILLISECOND, 0);            // set millisecond in second
-
-        return cal;                                  // return the date part
+        return days_between + 9;
     }
 
     /**
@@ -220,7 +206,11 @@ public class CalendarActivity extends AppCompatActivity {
                 return false;
             }
 
-            loadCalendarDay(position);
+            if (position == -1)
+                loadCalendarDay(9);
+            else
+                loadCalendarDay(position);
+
             return true;
         }
 
