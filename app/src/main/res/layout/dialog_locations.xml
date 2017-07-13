@@ -20,7 +20,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_workshops"
-            android:tag="workshops"
+            android:tag="@string/maps_location_workshops"
             android:onClick="focusTo"/>
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_openingceremony"
-            android:tag="openingceremony"
+            android:tag="@string/maps_location_openingceremony"
             android:onClick="focusTo"/>
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_closingceremony"
-            android:tag="closingceremony"
+            android:tag="@string/maps_location_closingceremony"
             android:onClick="focusTo"/>
 
         <TextView
@@ -56,7 +56,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_countryfair"
-            android:tag="countryfair"
+            android:tag="@string/maps_location_countryfair"
             android:onClick="focusTo"/>
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_artnight"
-            android:tag="artnight"
+            android:tag="@string/maps_location_artnight"
             android:onClick="focusTo"/>
 
         <TextView
@@ -80,7 +80,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_flagparade"
-            android:tag="flagparade"
+            android:tag="@string/maps_location_flagparade"
             android:onClick="focusTo"/>
 
         <TextView
@@ -92,7 +92,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_welcome"
-            android:tag="welcome"
+            android:tag="@string/maps_location_welcome"
             android:onClick="focusTo"/>
 
         <TextView
@@ -104,7 +104,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_speakup"
-            android:tag="speakup"
+            android:tag="@string/maps_location_speakup"
             android:onClick="focusTo"/>
 
         <TextView
@@ -116,7 +116,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_farewell"
-            android:tag="farewell"
+            android:tag="@string/maps_location_farewell"
             android:onClick="focusTo"/>
 
         <TextView
@@ -128,7 +128,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_monparty"
-            android:tag="monparty"
+            android:tag="@string/maps_location_monparty"
             android:onClick="focusTo"/>
 
         <TextView
@@ -140,7 +140,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_kafana"
-            android:tag="kafana"
+            android:tag="@string/maps_location_kafana"
             android:onClick="focusTo"/>
 
         <TextView
@@ -152,7 +152,7 @@
             android:layout_marginBottom="5dp"
             android:textColor="@color/white"
             android:text="@string/maps_location_ada"
-            android:tag="ada"
+            android:tag="@string/maps_location_ada"
             android:onClick="focusTo"/>
     </LinearLayout>
 </ScrollView>

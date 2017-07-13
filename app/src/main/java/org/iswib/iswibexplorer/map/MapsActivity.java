@@ -28,12 +28,17 @@ import org.iswib.iswibexplorer.news.NewsActivity;
 import org.iswib.iswibexplorer.settings.SettingsActivity;
 import org.iswib.iswibexplorer.workshops.WorkshopsActivity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
     // Dialog for location picking
     private DialogLocations dialog = new DialogLocations();
+    private ArrayList<Marker> markers = new ArrayList<>();
 
     // Zoom level
     int zoom = 14;
@@ -71,15 +76,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng position;
-        Marker marker;
 
         // Add a marker for Dom Petar Drapšin and move the camera
         position = new LatLng(44.8225824, 20.4588079);
-        marker = mMap.addMarker(new MarkerOptions()
+        markers.add(mMap.addMarker(new MarkerOptions()
                 .position(position)
-                .title(getResources().getString(R.string.maps_location_dom)));
-        marker.showInfoWindow();
+                .title(getResources().getString(R.string.maps_location_dom))));
+        markers.get(0).showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, zoom));
+
+        // add other locations
+        Map<String, LatLng> positions = new HashMap<>();
+        positions.put(getResources().getString(R.string.maps_location_kafana), new LatLng(44.824629, 20.457917));
+        positions.put(getResources().getString(R.string.maps_location_ada), new LatLng(44.786549, 20.395199));
+        positions.put(getResources().getString(R.string.maps_location_workshops), new LatLng(44.8042004, 20.4810465));
+        positions.put(getResources().getString(R.string.maps_location_openingceremony), new LatLng(44.810799, 20.462531));
+        positions.put(getResources().getString(R.string.maps_location_closingceremony), new LatLng(44.811378, 20.469856));
+        positions.put(getResources().getString(R.string.maps_location_welcome), new LatLng(44.817796, 20.4657486));
+        positions.put(getResources().getString(R.string.maps_location_monparty), new LatLng(44.807985, 20.444820));
+        positions.put(getResources().getString(R.string.maps_location_countryfair), new LatLng(44.82329, 20.4676));
+        positions.put(getResources().getString(R.string.maps_location_artnight), new LatLng(44.8178802, 20.4652923));
+        positions.put(getResources().getString(R.string.maps_location_flagparade), new LatLng(44.8119976, 20.4630151));
+        positions.put(getResources().getString(R.string.maps_location_speakup), new LatLng(44.8121435, 20.4625028));
+        positions.put(getResources().getString(R.string.maps_location_farewell), new LatLng(44.8057579, 20.475727));
+        positions.put(getResources().getString(R.string.maps_location_dom), new LatLng(44.8225824, 20.4588079));
+
+        // show them on map
+        for (String name : positions.keySet()) {
+            markers.add(mMap.addMarker(new MarkerOptions()
+                .position(positions.get(name))
+                .title(name)));
+        }
 
         // Handle zoom events
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
@@ -116,75 +143,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void focusTo(View view) {
 
-        Marker marker;
-        LatLng position;
-        String title;
-
-        String location = view.getTag().toString();
-        switch (location) {
-            case "kafana":
-                position = new LatLng(44.824629, 20.457917);
-                title = getString(R.string.maps_location_kafana);
-                break;
-            case "ada":
-                position = new LatLng(44.786549, 20.395199);
-                title = getString(R.string.maps_location_ada);
-                break;
-            case "workshops":
-                position = new LatLng(44.8042004, 20.4810465);
-                title = getString(R.string.maps_location_workshops);
-                break;
-            case "openingceremony":
-                position = new LatLng(44.810799, 20.462531);
-                title = getString(R.string.maps_location_openingceremony);
-                break;
-            case "closingceremony":
-                position = new LatLng(44.811378, 20.469856);
-                title = getString(R.string.maps_location_closingceremony);
-                break;
-            case "welcome":
-                position = new LatLng(44.817796, 20.4657486);
-                title = getString(R.string.maps_location_welcome);
-                break;
-            case "monparty":
-                position = new LatLng(44.807985, 20.444820);
-                title = getString(R.string.maps_location_monparty);
-                break;
-            case "countryfair":
-                position = new LatLng(44.82329, 20.4676);
-                title = getString(R.string.maps_location_countryfair);
-                break;
-            case "artnight":
-                position = new LatLng(44.8178802, 20.4652923);
-                title = getString(R.string.maps_location_artnight);
-                break;
-            case "flagparade":
-                position = new LatLng(44.8119976, 20.4630151);
-                title = getString(R.string.maps_location_flagparade);
-                break;
-            case "speakup":
-                position = new LatLng(44.8121435, 20.4625028);
-                title = getString(R.string.maps_location_speakup);
-                break;
-            case "farewell":
-                position = new LatLng(44.8057579, 20.475727);
-                title = getString(R.string.maps_location_farewell);
-                break;
-            default:
-                // Dom Petar Drapšin
-                position = new LatLng(44.8225824, 20.4588079);
-                title = getString(R.string.maps_location_dom);
+        String focus_to = view.getTag().toString();
+        Marker focus_marker = null;
+        for (Marker marker : markers) {
+            if (marker.getTitle().equals(focus_to)) {
+                focus_marker = marker;
+            }
         }
 
-        // Remove previos markers
-        mMap.clear();
-
-        // Add a marker for Kafana party
-        marker = mMap.addMarker(new MarkerOptions()
-                .position(position)
-                .title(title));
-        marker.showInfoWindow();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, zoom));
+        // Find a marker
+        if (focus_marker != null) {
+            focus_marker.showInfoWindow();
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(focus_marker.getPosition(), zoom));
+        }
 
         dialog.dismiss();
     }

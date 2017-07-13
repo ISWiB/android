@@ -17,7 +17,7 @@
         android:scaleType="centerCrop" />
 
     <TextView
-        android:id="@+id/calendar_item_title_left"
+        android:id="@+id/calendar_item_title"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="130dp"
@@ -29,18 +29,7 @@
         android:gravity="start|bottom" />
 
     <TextView
-        android:id="@+id/calendar_item_title_right"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="130dp"
-        android:textColor="#ffffff"
-        android:paddingLeft="10dp"
-        android:paddingTop="7dp"
-        android:paddingRight="10dp"
-        android:gravity="end|bottom"  />
-
-    <TextView
-        android:id="@+id/calendar_item_date_left"
+        android:id="@+id/calendar_item_date"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_centerHorizontal="true"
@@ -48,19 +37,8 @@
         android:textColor="#ffffff"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:layout_below="@+id/calendar_item_title_left"
+        android:layout_below="@+id/calendar_item_title"
         android:gravity="start" />
-
-    <TextView
-        android:id="@+id/calendar_item_date_right"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_centerHorizontal="true"
-        android:textColor="#ffffff"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_below="@+id/calendar_item_title_left"
-        android:gravity="end" />
 
     <TextView
         android:id="@+id/calendar_item_text"

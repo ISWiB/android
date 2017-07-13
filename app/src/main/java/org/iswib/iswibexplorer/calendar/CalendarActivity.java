@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceActivity;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -100,16 +102,6 @@ public class CalendarActivity extends AppCompatActivity {
             ((TextView)calendar_update.getChildAt(0)).setText(R.string.no_permission);
             calendar_update.getChildAt(1).setVisibility(View.GONE);
         }
-
-
-
-        // If finished
-        if (calendar_update != null) {
-            // Hide the calendar update info
-            //calendar_update.setVisibility(View.GONE);
-        }
-
-
     }
 
     public void executeCalendarDownloaderTask(int position) {
@@ -255,9 +247,11 @@ public class CalendarActivity extends AppCompatActivity {
                     items_to_remove--;
                 }
 
-                // add date
+                // add date and arrow
                 TextView text_view = (TextView) calendar_container.findViewById(R.id.calendar_date);
                 text_view.setText(date_text);
+                Drawable arrow = ResourcesCompat.getDrawable(getResources(), R.drawable.calendar_arrow, null);
+                text_view.setCompoundDrawablesWithIntrinsicBounds( arrow, null, null, null);
 
                 // add calendar items
                 for(View calendar_item : pub_calendar_items) {
@@ -310,8 +304,6 @@ public class CalendarActivity extends AppCompatActivity {
                             // Show work icon
                             calendar_schedule_work.setVisibility(View.VISIBLE);
                         }
-                    } else {
-                        calendar_schedule_right.append(getString(R.string.workshops_no));
                     }
                 }
             }
@@ -415,11 +407,9 @@ public class CalendarActivity extends AppCompatActivity {
                             break;
                     }
                 }
-                //final View root = getLayoutInflater().inflate(R.layout.activity_calendar, weakReference.get(), false);
-                View root = new View(CalendarActivity.this);
 
-                // Append a date and arrow down sign that users know it can be clicked
-                date_text = "\u25be " + date.substring(0, 6);
+                // Append a date
+                date_text = date.substring(0, 6);
 
                 // Add "first", "second" and "third" data
                 for(int i = 1; i <= 3; i++) {
@@ -452,36 +442,20 @@ public class CalendarActivity extends AppCompatActivity {
                     if (!image.equals("null")) {
 
                         // add calendar item
-                        final View calendar_item = getLayoutInflater().inflate(R.layout.calendar_item, null, false); // TODO
+                        final View calendar_item = getLayoutInflater().inflate(R.layout.calendar_item, weakReference.get(), false);
 
                         // load the image
                         ImageView item_image = (ImageView) calendar_item.findViewById(R.id.calendar_item_image);
                         item_image.setImageBitmap(img);
 
-                        // load the title // TODO
-                        TextView item_title_left = (TextView) calendar_item.findViewById(R.id.calendar_item_title_left);
-//                        if (title.contains(CalendarClass.SEPARATOR)) {
-//                            String titles[] = title.split(CalendarClass.SEPARATOR);
-//                            TextView item_title_right = (TextView) calendar_item.findViewById(R.id.calendar_item_title_right);
-//                            item_title_left.setTextSize(18);
-//                            item_title_right.setTextSize(18);
-//                            item_title_left.setText(titles[0]);
-//                            item_title_right.setText(titles[1]);
-//                        } else {
-                            item_title_left.setTextSize(25);
-                            item_title_left.setText(title);
-                       // }
+                        // load the title
+                        TextView item_title = (TextView) calendar_item.findViewById(R.id.calendar_item_title);
+                        item_title.setTextSize(25);
+                        item_title.setText(title);
 
                         // load the date
-                        TextView item_date_left = (TextView) calendar_item.findViewById(R.id.calendar_item_date_left);
-//                        if (time.contains(CalendarClass.SEPARATOR)) {
-//                            String dates[] = time.split(CalendarClass.SEPARATOR);
-//                            TextView item_date_right = (TextView) calendar_item.findViewById(R.id.calendar_item_date_right);
-//                            item_date_left.setText(dates[0]);
-//                            item_date_right.setText(dates[1]);
-//                        } else {
-                            item_date_left.setText(time);
-                       // }
+                        TextView item_date = (TextView) calendar_item.findViewById(R.id.calendar_item_date);
+                        item_date.setText(time);
 
                         // load the text
                         TextView item_text = (TextView) calendar_item.findViewById(R.id.calendar_item_text);

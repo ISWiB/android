@@ -37,15 +37,16 @@
     <string name="schedule_workshops">Workshops</string>
 
     <!-- Strings related to calendar days -->
-    <string name="day_1">DAY 1</string>
-    <string name="day_2">DAY 2</string>
-    <string name="day_3">DAY 3</string>
-    <string name="day_4">DAY 4</string>
-    <string name="day_5">DAY 5</string>
-    <string name="day_6">DAY 6</string>
-    <string name="day_7">DAY 7</string>
-    <string name="day_8">DAY 8</string>
-    <string name="today">TODAY</string>
+    <string name="day_1">DAY 1 \n sun 16-jul</string>
+    <string name="day_2">DAY 2 \n mon 17-jul</string>
+    <string name="day_3">DAY 3 \n tue 18-jul</string>
+    <string name="day_4">DAY 4 \n wed 19-jul</string>
+    <string name="day_5">DAY 5 \n thu 20-jul</string>
+    <string name="day_6">DAY 6 \n fri 21-jul</string>
+    <string name="day_7">DAY 7 \n sat 22-jul</string>
+    <string name="day_8">DAY 8 \n sun 23-jul</string>
+    <string name="day_9">DAY 9 \n mon 24-jul</string>
+    <string name="today">TODAY \n </string>
 
     <!-- Strings related to map locations -->
     <string name="maps_locations">Locations</string>
@@ -68,7 +69,7 @@
     <string name="article_image">Article Image</string>
     <string name="article_gradient">Article Gradient</string>
     <string name="image_description">Image Description</string>
-    <string name="update_info">Loading more… Please wait</string>
+    <string name="update_info">Loading… Please wait</string>
     <string name="download_error">Error updating…</string>
 
     <!-- Strings related to Settings -->
@@ -120,5 +121,4 @@
     <string name="pref_notifications_silent">Silent</string>
     <string name="pref_notifications_vibrate">Vibrate</string>
     <string name="workshops_no">No workshops</string>
-    <string name="day_9">DAY 9</string>
 </resources>
