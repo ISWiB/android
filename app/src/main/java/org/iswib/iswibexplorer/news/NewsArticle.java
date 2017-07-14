@@ -64,7 +64,7 @@ public class NewsArticle extends AppCompatActivity {
             article_text.setTypeface(Typeface.createFromAsset(getAssets(), "roboto.ttf"));
             text = text.replaceAll("<li>", "<br>&#149;&nbsp;");
             article_text.setLinkTextColor(Color.BLUE);
-            article_text.setText(Html.escapeHtml(text));
+            article_text.setText(Html.fromHtml(text));
         }
 
 
